@@ -4,6 +4,22 @@
 
 MineEcho is a source-available, local-first AI assistant framework for building private, extensible assistant workflows on top of local services and user-owned knowledge.
 
+MineEcho is not meant to be just another chat UI. Its product loop is:
+
+> **Remember** user preferences and past work.  
+> **Learn** from imported knowledge through Wiki++ and graph context.  
+> **Use** skills and external AI apps through one routing surface.  
+> **Save** context cost with TokenJuice reducers and local metrics.
+
+## Why MineEcho
+
+| Common product shape | Typical gap | MineEcho difference |
+|----------------------|-------------|---------------------|
+| Chat UI | No durable memory, tools and knowledge stay separate | Memory tree + knowledge base + skill routing + cost layer |
+| RAG knowledge base | Fragmented chunks, little action capability | raw/wiki storage, four-channel retrieval, AI apps as callable skills |
+| Agent tool framework | Tool output is noisy and context-heavy | TokenJuice keeps key errors, counts, and actionable lines |
+| Enterprise AI app portal | Apps become silos | AI apps are converted into skills with triggers, routing, and health checks |
+
 The project is designed around four baseline ideas:
 
 - **Skill routing:** route user intent to focused capabilities instead of pushing every task through one general prompt.
@@ -19,6 +35,36 @@ The project is designed around four baseline ideas:
 - Memory-to-knowledge alignment preview, commit history, and knowledge graph refresh hooks.
 - Knowledge graph neighborhood API for explaining selected nodes and one-hop relationships.
 - TokenJuice compression metrics with local persistence.
+
+## Core Highlights
+
+### Memory: runtime memory plus L0-L3 memory tree
+
+MineEcho separates memory into two complementary views:
+
+- **Working / Short-term / Long-term:** current session, daily interactions, cross-session profile and insights.
+- **L0 / L1 / L2 / L3 Memory Tree:** raw memory chunks, daily summaries, weekly summaries, and monthly archives.
+
+When a user asks a question, MineEcho recalls recent L0 chunks with keyword, semantic, local-vector, importance, and recency scoring, then reranks the top candidates with the configured embedding provider when available. L1/L2 summaries pass a local semantic gate before embedding-enhanced ranking, which reduces unrelated long-term context injection.
+
+### Wiki++ knowledge base
+
+MineEcho's knowledge base is organized as raw source files plus AI-maintained wiki pages. Query-time retrieval uses four channels:
+
+1. Vector search for semantic similarity.
+2. BM25 for Chinese/English keyword matching.
+3. Structured search over title, type, tags, and headings.
+4. Graph channel search over entities and one-hop neighborhoods.
+
+This makes it closer to a high-density, maintainable AI knowledge substrate than a simple chunk-only RAG store.
+
+### Skills and AI apps as one capability layer
+
+Native skills, imported skills, and registered AI apps enter the same registry. AI apps are converted into Gateway-callable skills, triggers are derived from `name + description`, and the router scores trigger, name, description, and mode evidence before returning candidates. AI apps therefore participate in the same routing and workflow surface as local skills.
+
+### TokenJuice cost controls
+
+TokenJuice ships with 15 built-in reducer rules for git, npm, cargo, docker, document extraction, and generic long output. It keeps errors, counts, head/tail context, and actionable lines instead of blindly truncating output. Based on the current rule structure, long tool/document outputs commonly fall into an estimated 20%-85% token-saving range depending on repetition and output shape; MineEcho records raw/reduced characters and estimated tokens saved locally for real workload measurement.
 
 ## Quick Start
 
@@ -115,6 +161,7 @@ For a more detailed file-by-file map, see [`docs/runtime-data.md`](docs/runtime-
 
 - Environment variables: [`docs/environment.md`](docs/environment.md)
 - Architecture overview: [`docs/architecture.md`](docs/architecture.md)
+- Product positioning and highlights: [`docs/product-positioning.zh-CN.md`](docs/product-positioning.zh-CN.md)
 - Runtime data and local secrets: [`docs/runtime-data.md`](docs/runtime-data.md)
 - Commercial use: [`COMMERCIAL.md`](COMMERCIAL.md)
 - Contribution workflow: [`CONTRIBUTING.md`](CONTRIBUTING.md)

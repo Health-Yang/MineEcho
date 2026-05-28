@@ -60,6 +60,7 @@ Review these files:
 - `docs/environment.zh-CN.md`
 - `docs/architecture.md`
 - `docs/architecture.zh-CN.md`
+- `docs/product-positioning.zh-CN.md`
 - `docs/runtime-data.md`
 - `docs/runtime-data.zh-CN.md`
 - `docs/known-limitations.zh-CN.md`

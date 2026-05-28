@@ -4,12 +4,75 @@ MineEcho 是一个源码开放、本地优先的 AI 助手框架，用于构建�
 
 它的核心目标不是再做一个聊天界面，而是把技能、记忆、知识库、知识图谱和成本控制串成一个可演进的助手系统。
 
+## 为什么是 MineEcho
+
+很多 AI 产品只解决其中一个问题：聊天、RAG、工具调用或成本控制。MineEcho 的重点是把它们串成一个闭环：
+
+> **记：** 记住用户说过什么、做过什么、偏好什么。  
+> **学：** 把外部文档整理成 Wiki++ 知识库和知识图谱。  
+> **用：** 把 skill 和 AI 应用接入同一个路由面。  
+> **省：** 用 TokenJuice 压缩工具输出、文档抽取和任务结果。
+
+这让 MineEcho 更像一个“个人/团队 AI 助手操作系统”，而不是一个孤立聊天壳。
+
+| 常见产品形态 | 常见短板 | MineEcho 的差异点 |
+|--------------|----------|-------------------|
+| 普通 Chat UI | 不记长期上下文，工具和知识分散 | 记忆树 + 知识库 + skill 路由 + 成本层 |
+| 单纯 RAG 知识库 | 文档碎片化，缺少行动能力 | raw/wiki 双层知识库 + 四通道检索 + AI 应用协同 |
+| Agent 工具框架 | 工具输出噪声大，上下文成本高 | TokenJuice 场景化压缩，保留错误、计数和关键行 |
+| 企业 AI 应用平台 | 应用之间割裂，用户习惯难沉淀 | AI 应用转换成 skill，统一触发、路由和健康检查 |
+
 ## 核心理念
 
 - **技能路由：** 用户提问后，系统优先判断是否应该调用某个专业 skill，而不是把所有问题都交给一个通用提示词。
 - **记忆沉淀：** 将交互历史压缩为可长期使用的工作记忆，同时保持原始记录本地可控。
 - **知识库与知识图谱：** 将导入文档、知识节点、实体关系组织成可浏览、可检索、可对齐的知识层。
 - **成本控制：** 通过本地默认、显式模型配置、TokenJuice 压缩和指标统计，避免长期使用时成本失控。
+
+## 核心亮点
+
+### 记忆系统：运行时记忆 + L0-L3 记忆树
+
+MineEcho 不只保存聊天记录，而是把记忆拆成两种互补视角：
+
+- **Working / Short-term / Long-term：** 当前会话、当日交互、跨会话用户画像和长期洞察。
+- **L0 / L1 / L2 / L3 Memory Tree：** 原始片段、日摘要、周摘要、月归档。
+
+用户提问时，MineEcho 会先从近期 L0 片段中粗排，再对候选记忆使用 embedding 重排；L1/L2 摘要会通过本地语义门槛后再增强排序。这样可以在控制 token 的前提下，把“前几天问过什么”“之前执行过什么任务”“用户偏好什么”注入到当前回答中。
+
+### Wiki++ 知识库：不是普通 RAG
+
+MineEcho 的知识库采用 **raw 原始层 + wiki 智能层 + chunk 索引层 + graph 图谱层 + alignment 对齐层**。
+
+查询时不是只靠向量搜索，而是使用四通道融合：
+
+1. 向量搜索：找语义相似 chunk。
+2. BM25：处理中英文关键词命中。
+3. 结构化搜索：利用 title、type、tags、heading。
+4. 图谱通道：通过实体节点和邻域关系找到关联知识。
+
+这种设计更接近“先把资料压成高密度、可维护知识，再给 AI 使用”的 Karpathy 式知识库思路，同时保留原始证据和图谱关系。
+
+### Skill 与 AI 应用协同
+
+MineEcho 会把原生 skill、导入 skill 和外部 AI 应用放进同一个技能注册与路由体系：
+
+- AI 应用会转换成 Gateway 可调用的 skill。
+- 系统从 `name + description` 自动生成触发词。
+- 用户提问后，路由器根据 trigger、name、description、mode 打分，返回候选技能和 evidence。
+
+结果是：AI 应用不再是孤立入口，而是可以被 MineEcho 在聊天和任务上下文中主动推荐和调用。
+
+### TokenJuice：场景化 token 压缩
+
+TokenJuice 当前内置 15 类规则，覆盖 git、npm、cargo、docker、文档抽取和通用输出。它不是简单截断，而是按场景保留关键事实：
+
+- 测试日志保留 pass/fail/skip 计数和失败上下文。
+- `git diff` 保留头尾片段、增删统计，过滤重复 header。
+- `docker logs` 过滤时间戳噪声，保留 error/warn 计数。
+- 文档抽取去空行、去重复，并保留结构头尾。
+
+基于当前规则结构，常见长输出可估算节省约 20%-85% token；真实节省比例取决于输出长度和重复程度，系统会本地记录 raw/reduced 字符数与 estimated tokens saved。
 
 ## 当前能力
 
@@ -127,6 +190,7 @@ BFF 默认端口是 `3085`。只有在同步修改 Console 代理目标时，才
 
 - 环境变量说明：[`docs/environment.zh-CN.md`](docs/environment.zh-CN.md)
 - 架构总览：[`docs/architecture.zh-CN.md`](docs/architecture.zh-CN.md)
+- 产品定位与核心亮点：[`docs/product-positioning.zh-CN.md`](docs/product-positioning.zh-CN.md)
 - 运行态数据与本地密钥：[`docs/runtime-data.zh-CN.md`](docs/runtime-data.zh-CN.md)
 - 已知限制与公开发布说明：[`docs/known-limitations.zh-CN.md`](docs/known-limitations.zh-CN.md)
 - 商业使用说明：[`COMMERCIAL.zh-CN.md`](COMMERCIAL.zh-CN.md)
