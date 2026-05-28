@@ -1,5 +1,7 @@
 # MineEcho
 
+**A local-first Memory OS for personal AI assistants: remember, learn, use skills, and spend fewer tokens.**
+
 [中文文档](README.zh-CN.md)
 
 MineEcho is a source-available, local-first AI assistant framework for building private, extensible assistant workflows on top of local services and user-owned knowledge.
@@ -11,6 +13,8 @@ MineEcho is not meant to be just another chat UI. Its product loop is:
 > **Use** skills and external AI apps through one routing surface.  
 > **Save** context cost with TokenLess reducers and local metrics.
 
+Use MineEcho when a normal chat UI is too forgetful, a RAG app is too passive, and an agent framework is too noisy to run as a long-term personal assistant.
+
 ## Why MineEcho
 
 | Common product shape | Typical gap | MineEcho difference |
@@ -19,6 +23,14 @@ MineEcho is not meant to be just another chat UI. Its product loop is:
 | RAG knowledge base | Fragmented chunks, little action capability | raw/wiki storage, four-channel retrieval, AI apps as callable skills |
 | Agent tool framework | Tool output is noisy and context-heavy | TokenLess keeps key errors, counts, and actionable lines |
 | Enterprise AI app portal | Apps become silos | AI apps are converted into skills with triggers, routing, and health checks |
+
+## What Makes It Different
+
+- **Memory-first assistant loop:** MineEcho stores raw interaction memory, daily/weekly/monthly summaries, semantic recall evidence, and memory-to-knowledge alignment instead of treating every chat as disposable.
+- **Wiki++ knowledge system:** imported sources become raw files, wiki pages, chunk indexes, graph nodes, and alignment candidates, so knowledge stays inspectable rather than becoming opaque vector chunks.
+- **Skill and AI app convergence:** external AI apps are registered as callable skills and participate in the same trigger, routing, health, and workflow surface as local skills.
+- **TokenLess cost layer:** long command logs, tool outputs, URL imports, and document extraction results are compressed by scenario-aware reducers before they enter memory or context.
+- **Local-first release posture:** runtime data, provider keys, chat history, audio, and metrics live under local MineEcho state and are excluded from the release tree.
 
 The project is designed around four baseline ideas:
 
@@ -91,7 +103,7 @@ If `node -v` is lower than 22, upgrade Node.js first.
 ### 2. Clone the repository
 
 ```sh
-git clone https://github.com/565628110-byte/MineEcho.git
+git clone https://github.com/Health-Yang/MineEcho.git
 cd MineEcho
 ```
 
