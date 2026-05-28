@@ -4,7 +4,9 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "install:apps": "npm --prefix apps/bff install && npm --prefix apps/console install",
+    "install:apps": "npm --prefix apps/bff install && npm --prefix apps/console install && npm --prefix vendor/openclaw-gateway install",
+    "install:gateway": "npm --prefix vendor/openclaw-gateway install",
+    "vendor:openclaw": "node scripts/vendor-openclaw.mjs",
     "dev": "node scripts/dev.mjs",
     "dev:bff": "npm --prefix apps/bff run dev",
     "dev:console": "npm --prefix apps/console run dev -- --host 127.0.0.1 --port 5175",

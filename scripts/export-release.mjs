@@ -64,6 +64,9 @@ function shouldExclude(src) {
   const rel = normalizeRel(relative(sourceRoot, src));
   if (!rel) return false;
   if (allowedRelativePaths.has(rel)) return false;
+  if (rel === "vendor/openclaw-gateway/dist" || rel.startsWith("vendor/openclaw-gateway/dist/")) {
+    return false;
+  }
 
   const parts = rel.split("/");
   if (parts.some((part) => ignoredSegments.has(part))) return true;

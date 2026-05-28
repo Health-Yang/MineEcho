@@ -1,0 +1,18 @@
+export declare function normalizeStringEntries(list?: ReadonlyArray<unknown>): string[];
+export declare function normalizeStringEntriesLower(list?: ReadonlyArray<unknown>): string[];
+export declare function uniqueValues<T>(values: Iterable<T>): T[];
+export declare function uniqueStrings(values: Iterable<string>): string[];
+export declare function sortUniqueStrings(values: Iterable<string>): string[];
+export declare function normalizeUniqueStringEntries(values?: Iterable<unknown>): string[];
+export declare function normalizeUniqueStringEntriesLower(values?: Iterable<unknown>): string[];
+export declare function normalizeSortedUniqueStringEntries(values?: Iterable<unknown>): string[];
+export declare function normalizeTrimmedStringList(value: unknown): string[];
+export declare function normalizeUniqueTrimmedStringList(value: unknown): string[];
+export declare function normalizeSortedUniqueTrimmedStringList(value: unknown): string[];
+export declare function normalizeOptionalTrimmedStringList(value: unknown): string[] | undefined;
+export declare function normalizeArrayBackedTrimmedStringList(value: unknown): string[] | undefined;
+export declare function normalizeSingleOrTrimmedStringList(value: unknown): string[];
+export declare function normalizeUniqueSingleOrTrimmedStringList(value: unknown): string[];
+export declare function normalizeCsvOrLooseStringList(value: unknown): string[];
+export declare function normalizeHyphenSlug(raw?: string | null): string;
+export declare function normalizeAtHashSlug(raw?: string | null): string;

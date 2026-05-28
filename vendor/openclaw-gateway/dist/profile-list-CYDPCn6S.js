@@ -1,0 +1,12 @@
+import { _ as uniqueStrings } from "./string-normalization-B8G0vlWE.js";
+import { r as resolveProviderIdForAuth } from "./provider-auth-aliases-5VCl4fwR.js";
+//#region src/agents/auth-profiles/profile-list.ts
+function dedupeProfileIds(profileIds) {
+	return uniqueStrings(profileIds);
+}
+function listProfilesForProvider(store, provider) {
+	const providerKey = resolveProviderIdForAuth(provider);
+	return Object.entries(store.profiles).filter(([, cred]) => resolveProviderIdForAuth(cred.provider) === providerKey).map(([id]) => id);
+}
+//#endregion
+export { listProfilesForProvider as n, dedupeProfileIds as t };

@@ -19,6 +19,8 @@ node_modules/
 
 # Build and packaged output
 dist/
+!vendor/openclaw-gateway/dist/
+!vendor/openclaw-gateway/dist/**
 release/
 releases/
 bundles/

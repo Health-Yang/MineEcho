@@ -1,0 +1,29 @@
+import { i as asOptionalRecord } from "./record-coerce-Btbek4uV.js";
+import { t as collectConfiguredAgentHarnessRuntimes } from "./harness-runtimes-B76WrYrN.js";
+//#region src/commands/doctor/shared/configured-runtime-plugin-installs.ts
+const CONFIGURED_RUNTIME_PLUGIN_INSTALL_CANDIDATES = [{
+	pluginId: "acpx",
+	label: "ACPX Runtime",
+	npmSpec: "@openclaw/acpx",
+	trustedSourceLinkedOfficialInstall: true
+}, {
+	pluginId: "codex",
+	label: "Codex",
+	npmSpec: "@openclaw/codex",
+	trustedSourceLinkedOfficialInstall: true
+}];
+function resolveConfiguredRuntimePluginInstallCandidate(runtimeId) {
+	return CONFIGURED_RUNTIME_PLUGIN_INSTALL_CANDIDATES.find((candidate) => candidate.pluginId === runtimeId);
+}
+function acpxRuntimeIsConfigured(cfg) {
+	const acp = asOptionalRecord(cfg.acp);
+	const backend = typeof acp?.backend === "string" ? acp.backend.trim().toLowerCase() : "";
+	return (backend === "acpx" || acp?.enabled === true || asOptionalRecord(acp?.dispatch)?.enabled === true) && (!backend || backend === "acpx");
+}
+function collectConfiguredRuntimePluginIds(cfg, env, options) {
+	const ids = new Set(collectConfiguredAgentHarnessRuntimes(cfg, env, options));
+	if (acpxRuntimeIsConfigured(cfg)) ids.add("acpx");
+	return [...ids].toSorted((left, right) => left.localeCompare(right));
+}
+//#endregion
+export { collectConfiguredRuntimePluginIds as n, resolveConfiguredRuntimePluginInstallCandidate as r, CONFIGURED_RUNTIME_PLUGIN_INSTALL_CANDIDATES as t };

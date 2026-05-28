@@ -7,6 +7,29 @@ import { logger } from "../utils/logger.js";
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 
+function resolveRepoRootCandidates(): string[] {
+  return [
+    process.env.MINEECHO_REPO_ROOT,
+    process.cwd(),
+    join(process.cwd(), "..", ".."),
+    join(__dirname, "..", "..", "..", ".."),
+    join(__dirname, "..", "..", "..", "..", ".."),
+  ].filter(Boolean) as string[];
+}
+
+async function firstExistingFile(candidates: string[]): Promise<string | null> {
+  const fs = await import("node:fs");
+  for (const candidate of candidates) {
+    try {
+      fs.accessSync(candidate);
+      return candidate;
+    } catch {
+      // ignore
+    }
+  }
+  return null;
+}
+
 /** 为 Gateway 子进程找到应该使用的 openclaw.json 路径，避免 BFF 和 Gateway 读到不同配置 */
 function resolveOpenclawConfigPath(): string | undefined {
   // 1. 若已有环境变量，直接使用
@@ -29,51 +52,38 @@ function resolveOpenclawConfigPath(): string | undefined {
 let gatewayProcess: ChildProcess | null = null;
 
 async function resolveGatewayLibEntry(): Promise<string | null> {
-  // 1. Container path: /app/node_modules/openclaw/dist/index.js (library entry)
-  try {
-    const containerLib = "/app/node_modules/openclaw/dist/index.js";
-    await import("node:fs").then((fs) => fs.accessSync(containerLib));
-    return containerLib;
-  } catch {
-    // ignore
+  // 1. Vendored runtime in the MineEcho repository. This lets local users run
+  // Gateway without separately installing OpenClaw as a global or app dependency.
+  for (const root of resolveRepoRootCandidates()) {
+    const vendored = await firstExistingFile([
+      join(root, "vendor/openclaw-gateway/dist/index.js"),
+      join(root, "vendor/openclaw-gateway/openclaw.mjs"),
+    ]);
+    if (vendored) {
+      return vendored;
+    }
   }
 
-  // 2. Dev path: node_modules/openclaw/dist/index.js
-  const devLib = join(process.cwd(), "node_modules/openclaw/dist/index.js");
-  try {
-    await import("node:fs").then((fs) => fs.accessSync(devLib));
-    return devLib;
-  } catch {
-    // ignore
-  }
+  // 2. Container path: /app/node_modules/openclaw/dist/index.js (library entry)
+  const containerLib = await firstExistingFile(["/app/node_modules/openclaw/dist/index.js"]);
+  if (containerLib) return containerLib;
 
-  // 3. Monorepo dev path: from BFF source/dist up to apps/electron/gateway
-  const monorepoLib = join(__dirname, "../../../electron/gateway/node_modules/openclaw/dist/index.js");
-  try {
-    await import("node:fs").then((fs) => fs.accessSync(monorepoLib));
-    return monorepoLib;
-  } catch {
-    // ignore
-  }
+  // 3. Dev path: node_modules/openclaw/dist/index.js
+  const devLib = await firstExistingFile([join(process.cwd(), "node_modules/openclaw/dist/index.js")]);
+  if (devLib) return devLib;
 
-  // 4. Desktop packaged (asar) path: from bff/dist up to Contents/node_modules
+  // 4. Monorepo dev path: from BFF source/dist up to apps/electron/gateway
+  const monorepoLib = await firstExistingFile([join(__dirname, "../../../electron/gateway/node_modules/openclaw/dist/index.js")]);
+  if (monorepoLib) return monorepoLib;
+
+  // 5. Desktop packaged (asar) path: from bff/dist up to Contents/node_modules
   //    __dirname = Contents/bff/dist/ → ../../.. = Contents/
-  const desktopLib = join(__dirname, "../../../node_modules/openclaw/dist/index.js");
-  try {
-    await import("node:fs").then((fs) => fs.accessSync(desktopLib));
-    return desktopLib;
-  } catch {
-    // ignore
-  }
+  const desktopLib = await firstExistingFile([join(__dirname, "../../../node_modules/openclaw/dist/index.js")]);
+  if (desktopLib) return desktopLib;
 
-  // 5. Desktop packaged (asar) path: from bff/dist up to Contents/gateway/node_modules
-  const desktopGatewayLib = join(__dirname, "../../../gateway/node_modules/openclaw/dist/index.js");
-  try {
-    await import("node:fs").then((fs) => fs.accessSync(desktopGatewayLib));
-    return desktopGatewayLib;
-  } catch {
-    // ignore
-  }
+  // 6. Desktop packaged (asar) path: from bff/dist up to Contents/gateway/node_modules
+  const desktopGatewayLib = await firstExistingFile([join(__dirname, "../../../gateway/node_modules/openclaw/dist/index.js")]);
+  if (desktopGatewayLib) return desktopGatewayLib;
 
   // 5b. Desktop packaged with pnpm: symlink points to .pnpm/ directory
   const desktopGatewayPnpmLib = join(__dirname, "../../../gateway/node_modules/.pnpm/openclaw@*/node_modules/openclaw/dist/index.js");
@@ -95,7 +105,7 @@ async function resolveGatewayLibEntry(): Promise<string | null> {
     // ignore
   }
 
-  // 7. BFF bundle root: when BFF is bundled as extraResources for Electron desktop build,
+  // 8. BFF bundle root: when BFF is bundled as extraResources for Electron desktop build,
   //    the bundle root contains node_modules/ with openclaw inside.
   //    Electron main.ts sets cwd to the bundle root and NODE_PATH to its node_modules.
   //    __dirname = resources/bff/dist/ → ../.. = resources/bff/ (bundle root)
@@ -110,7 +120,7 @@ async function resolveGatewayLibEntry(): Promise<string | null> {
     }
   }
 
-  // 8. NODE_PATH lookup (Electron sets this for desktop builds)
+  // 9. NODE_PATH lookup (Electron sets this for desktop builds)
   if (process.env.NODE_PATH) {
     const nodePaths = process.env.NODE_PATH.split(path.delimiter);
     for (const np of nodePaths) {

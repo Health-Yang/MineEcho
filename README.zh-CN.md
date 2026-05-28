@@ -130,7 +130,7 @@ cd MineEcho
 npm run install:apps
 ```
 
-这个命令会分别安装 BFF 和 Console 的依赖。
+这个命令会安装 BFF、Console，以及仓库内置的 OpenClaw Gateway runtime 依赖。MineEcho 已经在 `vendor/openclaw-gateway/` 中包含 OpenClaw Gateway runtime 源码，用户不需要单独安装 OpenClaw。
 
 ### 4. 创建本地环境文件
 
@@ -239,6 +239,8 @@ BFF 默认端口是 `3085`。只有在同步修改 Console 代理目标时，才
 更详细的运行态文件说明见 [`docs/runtime-data.zh-CN.md`](docs/runtime-data.zh-CN.md)。
 
 MineEcho 的底层执行能力会复用 OpenClaw PI 框架中的 Gateway 相关包。因此 `.openclaw/` 路径和部分 OpenClaw/Gateway 命名仍会出现在运行态和兼容代码中，它们是底层实现细节，不是对外产品品牌。
+
+仓库包含 `vendor/openclaw-gateway/`，这是基于 `openclaw@2026.5.27` 提取的 OpenClaw Gateway runtime 源码，遵循上游 MIT license。仓库不会提交 `node_modules`；运行 `npm run install:apps` 时会为该 runtime 安装第三方依赖。
 
 ## 项目文档
 

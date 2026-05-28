@@ -1,0 +1,2 @@
+import { a as resolvePluginMetadataSnapshot, i as loadPluginMetadataSnapshot, n as isPluginMetadataSnapshotCompatible, r as listPluginOriginsFromMetadataSnapshot, t as clearLoadPluginMetadataSnapshotMemo } from "./plugin-metadata-snapshot-Bb8bov-r.js";
+export { clearLoadPluginMetadataSnapshotMemo, isPluginMetadataSnapshotCompatible, listPluginOriginsFromMetadataSnapshot, loadPluginMetadataSnapshot, resolvePluginMetadataSnapshot };

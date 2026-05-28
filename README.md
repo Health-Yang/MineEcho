@@ -113,7 +113,7 @@ cd MineEcho
 npm run install:apps
 ```
 
-This installs dependencies for both BFF and Console.
+This installs dependencies for BFF, Console, and the vendored OpenClaw Gateway runtime under `vendor/openclaw-gateway`. MineEcho ships the OpenClaw Gateway runtime source in this repository, so users do not need to install OpenClaw separately.
 
 ### 4. Create local environment files
 
@@ -208,6 +208,8 @@ The following runtime directories are intentionally ignored and should stay out 
 - `apps/**/workspace/`
 
 MineEcho reuses Gateway-related packages from the OpenClaw PI framework in parts of the backend. Those names can appear in protocol adapters, package names, and config-file compatibility code; they are implementation details, not user-facing product branding.
+
+The repository includes `vendor/openclaw-gateway/`, a vendored copy of the OpenClaw Gateway runtime source from `openclaw@2026.5.27` under the upstream MIT license. `node_modules` are not committed; `npm run install:apps` installs the Gateway runtime's third-party dependencies locally.
 
 For a more detailed file-by-file map, see [`docs/runtime-data.md`](docs/runtime-data.md).
 
