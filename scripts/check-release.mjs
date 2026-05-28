@@ -56,7 +56,8 @@ function scan(dir) {
       entry.name.endsWith(".sqlite3") ||
       entry.name.endsWith(".db") ||
       entry.name.endsWith(".pem") ||
-      entry.name.endsWith(".key");
+      entry.name.endsWith(".key") ||
+      entry.name.endsWith(".tsbuildinfo");
 
     if (isBlockedFile) {
       findings.push({

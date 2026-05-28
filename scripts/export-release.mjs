@@ -81,6 +81,7 @@ function shouldExclude(src) {
     base.endsWith(".pem") ||
     base.endsWith(".key") ||
     base.endsWith(".log") ||
+    base.endsWith(".tsbuildinfo") ||
     base === ".DS_Store"
   );
 }
