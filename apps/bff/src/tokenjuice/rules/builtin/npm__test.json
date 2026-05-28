@@ -1,0 +1,35 @@
+{
+  "id": "npm/test",
+  "family": "npm-test",
+  "description": "npm test output formatter",
+  "match": {
+    "argv0": ["npm"],
+    "argvIncludesAny": [["test", "run", "t"]]
+  },
+  "filters": {
+    "skipPatterns": [],
+    "keepPatterns": []
+  },
+  "transforms": {
+    "stripAnsi": true,
+    "trimEmptyEdges": true
+  },
+  "summarize": {
+    "head": 30,
+    "tail": 20
+  },
+  "counters": [
+    {
+      "name": "pass",
+      "pattern": "PASS|passed|✓"
+    },
+    {
+      "name": "fail",
+      "pattern": "FAIL|failed|✗|×"
+    },
+    {
+      "name": "skip",
+      "pattern": "skip|SKIP|skipped"
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "id": "docker/ps",
+  "family": "docker-ps",
+  "description": "docker ps output formatter",
+  "match": {
+    "argv0": ["docker"],
+    "argvIncludesAny": [["ps"]]
+  },
+  "filters": {
+    "skipPatterns": [
+      "^CONTAINER ID.*$"
+    ],
+    "keepPatterns": []
+  },
+  "transforms": {
+    "stripAnsi": true,
+    "trimEmptyEdges": true
+  },
+  "summarize": {
+    "head": 15,
+    "tail": 5
+  },
+  "counters": [
+    {
+      "name": "container",
+      "pattern": "^[a-f0-9]"
+    },
+    {
+      "name": "running",
+      "pattern": "Up|running"
+    },
+    {
+      "name": "exited",
+      "pattern": "Exited"
+    }
+  ]
+}

@@ -1,0 +1,90 @@
+name: Bug report
+description: Report a reproducible MineEcho problem.
+title: "[Bug]: "
+labels:
+  - bug
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Do not include API keys, tokens, `.env`, `.mineecho/`, `.openclaw/`, imported documents, chat history, memory files, or private AI app endpoints.
+        For vulnerabilities or accidental secret exposure, follow `SECURITY.md` instead of opening a public issue.
+  - type: textarea
+    id: summary
+    attributes:
+      label: Summary
+      description: What happened?
+      placeholder: The knowledge graph task center shows completed, but the graph page still...
+    validations:
+      required: true
+  - type: textarea
+    id: steps
+    attributes:
+      label: Reproduction steps
+      description: Use placeholder data only.
+      placeholder: |
+        1. Start MineEcho with `npm run dev`
+        2. Import a sample document
+        3. Open Knowledge Base > Graph
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Chat
+        - Skill center
+        - AI apps
+        - Memory
+        - Knowledge base
+        - Knowledge graph
+        - TokenJuice / cost controls
+        - Gateway compatibility
+        - Docker / deployment
+        - Documentation
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: version
+    attributes:
+      label: Commit or version
+      placeholder: commit SHA, branch name, or release tag
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Keep it high-level. Do not paste secrets.
+      placeholder: |
+        OS:
+        Node:
+        Browser:
+        BFF port:
+        Started with: npm run dev / Docker / Electron
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant logs or screenshots
+      description: Redact tokens, local file paths, company data, user data, and session ids.
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Pre-submit checks
+      options:
+        - label: I removed secrets, private documents, local runtime data, and personal/company data from this issue.
+          required: true
+        - label: I searched existing issues and docs before filing this.
+          required: true

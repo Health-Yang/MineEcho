@@ -1,0 +1,27 @@
+{
+  "name": "mineecho",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "install:apps": "npm --prefix apps/bff install && npm --prefix apps/console install",
+    "dev": "node scripts/dev.mjs",
+    "dev:bff": "npm --prefix apps/bff run dev",
+    "dev:console": "npm --prefix apps/console run dev -- --host 127.0.0.1 --port 5175",
+    "start:bff": "bash start-mineecho.sh",
+    "build": "npm --prefix apps/bff run build && npm --prefix apps/console run build",
+    "check:versions": "node scripts/check-versions.mjs",
+    "check:release": "node scripts/check-release.mjs",
+    "export:release": "node scripts/export-release.mjs",
+    "test:export-release": "node scripts/export-release.test.mjs",
+    "audit:apps": "node scripts/audit-apps.mjs",
+    "smoke": "node scripts/smoke.mjs",
+    "verify:bff": "npm --prefix apps/bff run test:ai-apps && npm --prefix apps/bff run test:ai-app-adapters && npm --prefix apps/bff run test:ai-app-direct-chat && npm --prefix apps/bff run test:bff-url && npm --prefix apps/bff run test:redact && npm --prefix apps/bff run test:chat-upload-path && npm --prefix apps/bff run test:chat-attachments && npm --prefix apps/bff run test:chat-context-evidence && npm --prefix apps/bff run test:context-budget-planner && npm --prefix apps/bff run test:task-output-budget && npm --prefix apps/bff run test:memory-context-builder && npm --prefix apps/bff run test:memory-dream && npm --prefix apps/bff run test:memory-dream-scheduler && npm --prefix apps/bff run test:memory-dream-route && npm --prefix apps/bff run test:memory-storyline && npm --prefix apps/bff run test:memory-embedding && npm --prefix apps/bff run test:semantic-recall && npm --prefix apps/bff run test:semantic-vector && npm --prefix apps/bff run test:channels && npm --prefix apps/bff run test:config-path && npm --prefix apps/bff run test:config-custom-provider && npm --prefix apps/bff run test:init-provider-defaults && npm --prefix apps/bff run test:skill-router && npm --prefix apps/bff run test:trigger-registry-fallback && npm --prefix apps/bff run test:starter-skills && npm --prefix apps/bff run test:skill-health && npm --prefix apps/bff run test:skill-import-package && npm --prefix apps/bff run test:skill-import-route && npm --prefix apps/bff run test:preferred-skill && npm --prefix apps/bff run test:memory-timeline && npm --prefix apps/bff run test:meeting-memory && npm --prefix apps/bff run test:tokenjuice-metrics && npm --prefix apps/bff run test:knowledge-alignment && npm --prefix apps/bff run test:knowledge-alignment-commit && npm --prefix apps/bff run test:knowledge-alignment-history && npm --prefix apps/bff run test:graph-neighborhood && npm --prefix apps/bff run test:graph-cleanup && npm --prefix apps/bff run test:knowledge-paths && npm --prefix apps/bff run test:knowledge-consistency && npm --prefix apps/bff run test:lightrag-path && npm --prefix apps/bff run test:knowledge-tasks && npm --prefix apps/bff run test:knowledge-url-cleaner && npm --prefix apps/bff run test:embedding-key-resolver && npm --prefix apps/bff run build",
+    "verify:console": "npm --prefix apps/console run test:skill-route && npm --prefix apps/console run test:skill-health && npm --prefix apps/console run test:ai-app-health && npm --prefix apps/console run test:skill-navigation && npm --prefix apps/console run test:preferred-skill && npm --prefix apps/console run test:knowledge-alignment && npm --prefix apps/console run test:knowledge-graph-events && npm --prefix apps/console run test:knowledge-graph-focus && npm --prefix apps/console run test:knowledge-graph-performance && npm --prefix apps/console run test:knowledge-graph-scope && npm --prefix apps/console run test:chat-context-evidence && npm --prefix apps/console run test:chat-processing-status && npm --prefix apps/console run test:memory-timeline && npm --prefix apps/console run test:memory-dream && npm --prefix apps/console run test:memory-storyline && npm --prefix apps/console run test:meeting-stats && npm --prefix apps/console run test:graph-neighborhood && npm --prefix apps/console run test:local-auth && npm --prefix apps/console run test:navigation-tabs && npm --prefix apps/console run test:tokenjuice-metrics && npm --prefix apps/console run build",
+    "verify": "npm run check:versions && npm run verify:bff && npm run verify:console"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "license": "SEE LICENSE IN LICENSE"
+}

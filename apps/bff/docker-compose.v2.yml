@@ -1,0 +1,173 @@
+# MineEcho 容器化部署配置
+# 改进点：
+# 1. 使用 Docker Compose profiles 支持多种部署模式
+# 2. 健康检查
+# 3. 资源限制
+# 4. 日志轮转
+# 5. 环境变量集中管理
+
+volumes:
+  openclaw-config:
+    driver: local
+  mineecho-data:
+    driver: local
+
+networks:
+  mineecho-network:
+    driver: bridge
+
+# ==========================================
+# 基础服务定义（可复用）
+# ==========================================
+x-mineecho-common: &mineecho-common
+  image: mineecho:latest
+  build:
+    context: ../../
+    dockerfile: apps/bff/docker/Dockerfile.v2
+    args:
+      NODE_IMAGE: ${NODE_IMAGE:-m.daocloud.io/docker.io/library/node:22-alpine}
+  restart: unless-stopped
+  networks:
+    - mineecho-network
+
+# ==========================================
+# 生产环境部署（单容器：Gateway + BFF + Console）
+# ==========================================
+services:
+  mineecho:
+    <<: *mineecho-common
+    container_name: mineecho
+    profiles: ["default", "production"]
+    environment:
+      # 端口配置
+      BFF_PORT: "3085"
+      CONSOLE_DIST: /app/console-dist
+
+      # Gateway 配置
+      OPENCLAW_GATEWAY_URL: ws://127.0.0.1:18789
+      OPENCLAW_GATEWAY_TOKEN: ${OPENCLAW_GATEWAY_TOKEN:-mineecho-local}
+      OPENCLAW_GATEWAY_PORT: "18789"
+      OPENCLAW_HOME: /app/.openclaw
+
+      # MineEcho 配置
+      MINECHO_CONFIG_HOME: /app/.mineecho
+      MINECHO_VERSION: "0.1.0"
+
+      # L1/L2 连接配置
+      L1_URL: ${L1_URL:-http://host.docker.internal:3081}
+      L2_URL: ${L2_URL:-http://host.docker.internal:3082}
+
+      # 模型配置（可选，首次启动可在 Web 界面配置）
+      MINIMAX_API_KEY: ${MINIMAX_API_KEY:-}
+
+      # 日志配置
+      LOG_LEVEL: ${LOG_LEVEL:-info}
+      LOG_FORMAT: ${LOG_FORMAT:-json}
+
+      # 运行时模式
+      MINECHO_RUNTIME: docker
+
+    volumes:
+      # 配置持久化
+      - openclaw-config:/app/.openclaw
+      - mineecho-data:/app/.mineecho
+
+      # 工作区挂载（跨平台兼容）
+      - ${MINECHO_WORKSPACE_ROOT:-./workspace}:/app/workspace
+
+      # 可选：挂载自定义技能目录
+      - ${MINECHO_SKILLS_DIR:-./skills}:/app/custom-skills:ro
+
+    ports:
+      - "${MINECHO_PORT:-3085}:3085"
+
+    # 健康检查
+    healthcheck:
+      test: ["CMD", "/app/healthcheck.sh"]
+      interval: 30s
+      timeout: 10s
+      start_period: 60s
+      retries: 3
+
+    # 资源限制
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'
+          memory: 2G
+        reservations:
+          cpus: '0.5'
+          memory: 512M
+
+    # 日志配置
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "100m"
+        max-file: "3"
+        labels: "service,environment"
+        env: "OS_VERSION,CUDA_VERSION"
+
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+  # ==========================================
+  # 开发环境部署（带热重载）
+  # ==========================================
+  mineecho-dev:
+    <<: *mineecho-common
+    container_name: mineecho-dev
+    profiles: ["dev"]
+    environment:
+      NODE_ENV: development
+      BFF_PORT: "3085"
+      LOG_LEVEL: debug
+      MINECHO_RUNTIME: docker-dev
+    volumes:
+      - openclaw-config:/app/.openclaw
+      - mineecho-data:/app/.mineecho
+      # 开发模式：挂载源码实现热重载
+      - ./src:/app/bff/src:ro
+      - ../console/src:/app/console/src:ro
+    ports:
+      - "3085:3085"
+    # 开发模式无资源限制
+
+  # ==========================================
+  # 仅 Gateway（用于分布式部署）
+  # ==========================================
+  gateway-only:
+    image: mineecho-gateway:latest
+    build:
+      context: ../../
+      dockerfile: apps/bff/docker/Dockerfile.gateway-only
+    container_name: mineecho-gateway
+    profiles: ["distributed"]
+    environment:
+      OPENCLAW_GATEWAY_PORT: "18789"
+      OPENCLAW_GATEWAY_TOKEN: ${OPENCLAW_GATEWAY_TOKEN:-mineecho-local}
+    volumes:
+      - openclaw-config:/app/.openclaw
+    ports:
+      - "18789:18789"
+    networks:
+      - mineecho-network
+
+  # ==========================================
+  # 仅 BFF（用于分布式部署）
+  # ==========================================
+  bff-only:
+    <<: *mineecho-common
+    container_name: mineecho-bff
+    profiles: ["distributed"]
+    environment:
+      BFF_PORT: "3085"
+      OPENCLAW_GATEWAY_URL: ws://gateway-only:18789
+      OPENCLAW_GATEWAY_TOKEN: ${OPENCLAW_GATEWAY_TOKEN:-mineecho-local}
+    depends_on:
+      gateway-only:
+        condition: service_healthy
+    ports:
+      - "3085:3085"
+    networks:
+      - mineecho-network

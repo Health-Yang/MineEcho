@@ -1,0 +1,37 @@
+{
+  "id": "document/html",
+  "family": "document-html",
+  "description": "HTML/web page extraction output formatter",
+  "match": {
+    "toolNames": ["html_extractor", "web_fetch", "scrape", "fetch_url", "extract_html"]
+  },
+  "filters": {
+    "skipPatterns": [
+      "^\\s*$"
+    ],
+    "keepPatterns": []
+  },
+  "transforms": {
+    "stripAnsi": true,
+    "trimEmptyEdges": true,
+    "dedupeAdjacent": true
+  },
+  "summarize": {
+    "head": 40,
+    "tail": 20
+  },
+  "counters": [
+    {
+      "name": "links",
+      "pattern": "^\\[.*\\]\\(https?://"
+    },
+    {
+      "name": "headers",
+      "pattern": "^#"
+    },
+    {
+      "name": "code",
+      "pattern": "^\\s*```"
+    }
+  ]
+}

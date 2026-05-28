@@ -1,0 +1,37 @@
+{
+  "id": "document/xlsx",
+  "family": "document-xlsx",
+  "description": "Excel spreadsheet extraction and summary output formatter",
+  "match": {
+    "toolNames": ["excel_extractor", "xlsx_extractor", "extract_excel", "exceljs"]
+  },
+  "filters": {
+    "skipPatterns": [
+      "^\\s*$"
+    ],
+    "keepPatterns": []
+  },
+  "transforms": {
+    "stripAnsi": true,
+    "trimEmptyEdges": true,
+    "dedupeAdjacent": false
+  },
+  "summarize": {
+    "head": 50,
+    "tail": 20
+  },
+  "counters": [
+    {
+      "name": "rows",
+      "pattern": "^\\|"
+    },
+    {
+      "name": "columns",
+      "pattern": "^\\|.*\\|$"
+    },
+    {
+      "name": "stats",
+      "pattern": "\\*\\*.*\\*\\*:"
+    }
+  ]
+}

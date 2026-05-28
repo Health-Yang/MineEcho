@@ -1,0 +1,616 @@
+* { box-sizing: border-box; }
+html, body, #root { height: 100%; margin: 0; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; }
+
+/* 聊天页面容器 */
+.chat-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 400px;
+  background: #f5f7fa;
+}
+
+/* 顶部会话控制栏 */
+.chat-header {
+  padding: 12px 16px;
+  background: #fff;
+  border-bottom: 1px solid #e8ecf1;
+  flex-shrink: 0;
+}
+
+/* 消息列表区域 */
+.chat-messages {
+  flex: 1;
+  overflow: auto;
+  padding: 20px 16px;
+  position: relative;
+}
+
+/* 虚拟列表容器 */
+.chat-messages > div[style*="position: relative"] {
+  width: 100%;
+}
+
+/* 空状态 */
+.chat-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 64px 16px;
+  color: #8c8c8c;
+}
+
+.chat-empty-icon {
+  margin-bottom: 16px;
+  padding: 24px;
+  background: #f5f7fa;
+  border-radius: 50%;
+}
+
+/* 示例问题按钮 */
+.example-questions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  max-width: 400px;
+}
+
+/* 消息行 */
+.message-row {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 20px;
+  animation: fadeIn 0.2s ease-out;
+}
+
+.message-row.user {
+  justify-content: flex-end;
+}
+
+.message-row.assistant {
+  justify-content: flex-start;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* 头像 */
+.avatar {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.avatar.assistant {
+  margin-right: 12px;
+  background: #0066ff !important;
+  color: #fff !important;
+}
+
+.avatar.user {
+  margin-left: 12px;
+  background: #0066ff !important;
+}
+
+/* 消息包装器（包含气泡和操作按钮） */
+.message-wrapper {
+  display: flex;
+  flex-direction: column;
+  max-width: 75%;
+  position: relative;
+}
+
+/* 消息气泡 */
+.message-bubble {
+  padding: 12px 16px;
+  border-radius: 12px;
+  font-size: 14px;
+  line-height: 1.6;
+  word-break: break-word;
+  position: relative;
+  transition: box-shadow 0.2s ease;
+}
+
+.message-bubble.user {
+  background: #0066ff;
+  color: #fff;
+  border-radius: 12px 12px 4px 12px;
+  box-shadow: 0 1px 2px rgba(0, 102, 255, 0.15);
+}
+
+.message-bubble.assistant {
+  background: #fff;
+  color: rgba(0, 0, 0, 0.85);
+  border: 1px solid #e8ecf1;
+  border-radius: 12px 12px 12px 4px;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.04);
+}
+
+/* loading 状态 - 简化样式，避免影响内容显示 */
+.message-bubble.assistant.loading {
+  min-width: 80px;
+}
+
+.message-bubble:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.message-bubble.user:hover {
+  box-shadow: 0 2px 8px rgba(0, 102, 255, 0.15);
+}
+
+/* 消息操作按钮 - 常驻显示在消息下方 */
+.message-actions {
+  display: flex;
+  gap: 4px;
+  margin-top: 6px;
+  opacity: 0.6;
+  transition: opacity 0.2s ease;
+}
+
+.message-row:hover .message-actions {
+  opacity: 1;
+}
+
+.message-actions.user {
+  justify-content: flex-end;
+  padding-right: 4px;
+}
+
+.message-actions.assistant {
+  justify-content: flex-start;
+  padding-left: 4px;
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: none;
+  background: transparent;
+  color: #8c8c8c;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.action-btn:hover {
+  background: #f5f7fa;
+  color: #0066ff;
+}
+
+.message-actions.user .action-btn:hover {
+  background: rgba(0, 102, 255, 0.1);
+}
+
+/* 代码块样式 */
+.code-block-wrapper {
+  position: relative;
+  margin: 12px 0;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f8f9fa;
+  border: 1px solid #e8e8e8;
+}
+
+.code-block {
+  margin: 0;
+  padding: 40px 16px 16px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  overflow-x: auto;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.code-copy-btn {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+  border: 1px solid #e8e8e8;
+  background: #fff;
+  color: #8c8c8c;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 1;
+}
+
+.code-copy-btn:hover {
+  background: #f5f7fa;
+  color: #0066ff;
+  border-color: #0066ff;
+}
+
+/* Markdown 内容样式优化 */
+.markdown-body p:last-child {
+  margin-bottom: 0 !important;
+}
+
+.markdown-body pre + p {
+  margin-top: 10px;
+}
+
+.markdown-link {
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
+  transition: opacity 0.2s ease;
+}
+
+.markdown-link:hover {
+  opacity: 0.8;
+}
+
+/* 输入框区域 */
+.chat-input-area {
+  padding: 16px;
+  background: #fff;
+  border-top: 1px solid #e8ecf1;
+  flex-shrink: 0;
+}
+
+.input-wrapper {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  background: #fff;
+  border: 1px solid #e8ecf1;
+  border-radius: 12px;
+  padding: 8px 12px;
+  transition: all 0.15s ease;
+}
+
+.input-wrapper:focus-within {
+  border-color: #0066ff;
+  box-shadow: 0 0 0 3px rgba(0,102,255,0.08);
+}
+
+.chat-textarea {
+  flex: 1;
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  resize: none;
+  font-size: 14px;
+  line-height: 1.6;
+  padding: 4px 0;
+  min-height: 36px;
+  max-height: 120px;
+}
+
+.chat-textarea:focus {
+  box-shadow: none !important;
+}
+
+.chat-textarea::placeholder {
+  color: #a8b8cc;
+}
+
+.input-actions {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.input-toolbar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 8px;
+  padding: 0 4px;
+}
+
+.kb-toggle-btn {
+  font-size: 14px;
+  color: #8c8c8c;
+  transition: all 0.2s ease;
+}
+
+.kb-toggle-btn:hover {
+  color: #0066ff;
+  background: rgba(0, 102, 255, 0.04);
+}
+
+.kb-toggle-btn.active {
+  color: #0066ff;
+  background: rgba(0, 102, 255, 0.08);
+  font-weight: 500;
+}
+
+.send-btn {
+  height: 32px;
+  padding: 0 16px;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+.stop-btn {
+  height: 32px;
+  border-radius: 6px;
+}
+
+/* 响应式适配 */
+@media (max-width: 768px) {
+  .message-wrapper {
+    max-width: 85%;
+  }
+
+  .chat-header {
+    padding: 10px 12px;
+  }
+
+  .chat-messages {
+    padding: 16px 12px;
+  }
+
+  .chat-input-area {
+    padding: 12px;
+  }
+
+  .message-bubble {
+    padding: 10px 14px;
+    font-size: 14px;
+  }
+}
+
+@media (max-width: 480px) {
+  .message-wrapper {
+    max-width: 90%;
+  }
+
+  .avatar {
+    display: none;
+  }
+
+  .send-btn {
+    padding: 0 16px;
+  }
+
+  .input-wrapper {
+    padding: 6px 10px;
+  }
+}
+
+/* 滚动条样式优化 */
+.chat-messages::-webkit-scrollbar {
+  width: 6px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+  background: #d1d9e3;
+  border-radius: 3px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb:hover {
+  background: #a8b8cc;
+}
+
+/* 代码块滚动条 */
+.code-block::-webkit-scrollbar {
+  height: 6px;
+}
+
+.code-block::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.code-block::-webkit-scrollbar-thumb {
+  background: #d1d9e3;
+  border-radius: 3px;
+}
+
+/* ==================== 侧边栏布局样式 ==================== */
+
+/* 侧边栏内部布局 - 使用 flexbox */
+.sidebar-header {
+  padding: 0;
+  border-bottom: 1px solid #e8ecf1;
+  flex-shrink: 0;
+}
+
+/* 中间：功能 Tab 列表 - 不限制高度 */
+.sidebar-tabs {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.sidebar-tabs .ant-menu {
+  padding: 8px;
+}
+
+.sidebar-tabs .ant-menu-item {
+  margin: 4px 0;
+  border-radius: 8px;
+}
+
+/* 底部：状态信息 */
+.sidebar-footer {
+  padding: 0;
+  border-top: 1px solid #e8ecf1;
+  background: #f5f7fa;
+  flex-shrink: 0;
+}
+
+/* 调整聊天页面样式适配新布局 */
+.chat-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 400px;
+  background: #f5f7fa;
+}
+
+/* 聊天页面顶部 header */
+.chat-header {
+  height: 56px;
+  padding: 0 24px;
+  background: #fff;
+  border-bottom: 1px solid #e8ecf1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
+}
+
+/* 内容区域与左侧栏的间距 */
+.ant-layout-content {
+  padding: 16px !important;
+}
+
+/* ==================== MineEcho Design System ==================== */
+
+/* Cards */
+.sf-card {
+  background: #fff;
+  border-radius: 12px;
+  border: 1px solid #e8ecf1;
+  transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.sf-card:hover {
+  border-color: #b3d1ff;
+  box-shadow: 0 2px 12px rgba(0,102,255,0.06);
+}
+
+/* Sidebar Nav */
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #646a73;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-decoration: none;
+}
+.nav-item:hover {
+  background: #f5f7fa;
+  color: #1f2329;
+}
+.nav-item.active {
+  background: #e6f0ff;
+  color: #0066ff;
+  font-weight: 600;
+}
+
+/* Messages */
+.msg-ai {
+  border-radius: 12px 12px 12px 4px;
+  background: #fff;
+  border: 1px solid #e8ecf1;
+  padding: 12px 16px;
+  max-width: 75%;
+  word-break: break-word;
+}
+.msg-user {
+  border-radius: 12px 12px 4px 12px;
+  background: #0066ff;
+  color: #fff;
+  padding: 12px 16px;
+  max-width: 75%;
+  word-break: break-word;
+}
+
+/* Buttons */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #0066ff;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 6px 16px;
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.btn-primary:hover { background: #0052cc; }
+.btn-primary:active { background: #003d99; }
+
+.btn-ghost {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: #fff;
+  border: 1px solid #e8ecf1;
+  color: #646a73;
+  border-radius: 8px;
+  padding: 6px 14px;
+  font-size: 13px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.btn-ghost:hover {
+  border-color: #0066ff;
+  color: #0066ff;
+}
+
+/* Input focus ring */
+.input-wrap {
+  background: #fff;
+  border: 1px solid #e8ecf1;
+  border-radius: 12px;
+  transition: all 0.15s ease;
+}
+.input-wrap:focus-within {
+  border-color: #0066ff;
+  box-shadow: 0 0 0 3px rgba(0,102,255,0.08);
+}
+
+/* Status dot */
+.status-on {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #00b365;
+  box-shadow: 0 0 0 2px rgba(0,179,101,0.15);
+}
+.status-off {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #d1d9e3;
+}
+
+/* Page transition */
+.page-transition {
+  animation: fadeOnly 0.25s ease forwards;
+}
+@keyframes fadeOnly {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+/* Graph */
+.graph-line {
+  stroke: #d1d9e3;
+  stroke-width: 1.5;
+}
+.graph-node {
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+.graph-node:hover {
+  opacity: 0.85;
+}

@@ -1,0 +1,22 @@
+{
+  "id": "npm/list",
+  "family": "npm-list",
+  "description": "npm list output formatter",
+  "match": {
+    "argv0": ["npm"],
+    "argvIncludesAny": [["list"]]
+  },
+  "filters": {
+    "skipPatterns": [],
+    "keepPatterns": []
+  },
+  "transforms": {
+    "stripAnsi": true,
+    "trimEmptyEdges": true,
+    "dedupeAdjacent": true
+  },
+  "summarize": {
+    "head": 20,
+    "tail": 5
+  }
+}

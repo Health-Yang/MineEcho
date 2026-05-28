@@ -1,0 +1,148 @@
+{
+  "name": "mineecho-console",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "main": "electron/main.js",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "preview": "vite preview",
+    "electron:dev": "vite build && electron electron/main.js",
+    "electron:build": "npm run build && electron-builder",
+    "electron:build:win": "npm run build && electron-builder --win",
+    "electron:build:mac": "npm run build && electron-builder --mac",
+    "test:skill-route": "tsx src/utils/skillRoute.test.ts",
+    "test:skill-health": "tsx src/utils/skillHealth.test.ts",
+    "test:ai-app-health": "tsx src/utils/aiAppHealth.test.ts",
+    "test:skill-navigation": "tsx src/utils/skillNavigation.test.ts",
+    "test:preferred-skill": "tsx src/utils/preferredSkill.test.ts",
+    "test:knowledge-alignment": "tsx src/utils/knowledgeAlignment.test.ts",
+    "test:knowledge-graph-events": "tsx src/utils/knowledgeGraphEvents.test.ts",
+    "test:knowledge-graph-focus": "tsx src/utils/knowledgeGraphFocus.test.ts",
+    "test:knowledge-graph-performance": "tsx src/utils/knowledgeGraphPerformance.test.ts",
+    "test:knowledge-graph-scope": "tsx src/utils/knowledgeGraphScope.test.ts",
+    "test:chat-context-evidence": "tsx src/utils/chatContextEvidence.test.ts",
+    "test:chat-processing-status": "tsx src/utils/chatProcessingStatus.test.ts",
+    "test:memory-timeline": "tsx src/utils/memoryTimeline.test.ts",
+    "test:memory-dream": "tsx src/utils/memoryDream.test.ts",
+    "test:memory-storyline": "tsx src/utils/memoryStoryline.test.ts",
+    "test:meeting-stats": "tsx src/utils/meetingStats.test.ts",
+    "test:graph-neighborhood": "tsx src/utils/graphNeighborhood.test.ts",
+    "test:local-auth": "tsx src/utils/localAuth.test.ts",
+    "test:navigation-tabs": "tsx src/utils/navigationTabs.test.ts",
+    "test:tokenjuice-metrics": "tsx src/utils/tokenJuiceMetrics.test.ts",
+    "postinstall": "electron-builder install-app-deps"
+  },
+  "dependencies": {
+    "@ant-design/icons": "^5.5.0",
+    "@tanstack/react-virtual": "^3.13.23",
+    "@xyflow/react": "^12.10.1",
+    "antd": "^5.22.0",
+    "mermaid": "^11.14.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-markdown": "^10.1.0",
+    "react-router-dom": "^7.0.1",
+    "remark-gfm": "^4.0.1"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "electron": "^41.3.0",
+    "electron-builder": "^26.8.1",
+    "png-to-ico": "^3.0.1",
+    "tsx": "^4.22.3",
+    "typescript": "~5.6.3",
+    "vite": "^6.2.0"
+  },
+  "build": {
+    "appId": "com.mineecho.app",
+    "productName": "MineEcho",
+    "directories": {
+      "output": "release",
+      "buildResources": "build"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "!node_modules/**/*",
+      "node_modules/electron/**/*"
+    ],
+    "extraResources": [
+      {
+        "from": "bff-bundle",
+        "to": "bff",
+        "filter": [
+          "**/*",
+          "!node_modules/.cache/**/*",
+          "!node_modules/**/*.d.ts",
+          "!node_modules/**/CHANGELOG.md",
+          "!node_modules/**/README.md",
+          "!node_modules/**/test/**",
+          "!node_modules/**/tests/**",
+          "!node_modules/**/__tests__/**",
+          "!node_modules/**/docs/**",
+          "!node_modules/**/examples/**",
+          "!node_modules/**/example/**",
+          "!node_modules/**/benchmark/**",
+          "!node_modules/**/.github/**"
+        ]
+      }
+    ],
+    "asarUnpack": [
+      "**/*.node",
+      "**/sqlite-vec*/**/*"
+    ],
+    "nativeRebuilder": "sequential",
+    "npmRebuild": true,
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "icon": "public/icon.ico"
+    },
+    "mac": {
+      "target": [
+        {
+          "target": "dmg",
+          "arch": [
+            "x64",
+            "arm64"
+          ]
+        }
+      ],
+      "icon": "public/icon.icns"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "MineEcho",
+      "include": "build/installer.nsh",
+      "deleteAppDataOnUninstall": false,
+      "unicode": true,
+      "installerIcon": "public/icon.ico",
+      "uninstallerIcon": "public/icon.ico",
+      "installerHeaderIcon": "public/icon.ico"
+    },
+    "afterPack": "build/afterPack.cjs",
+    "portable": {
+      "artifactName": "${productName}-${version}-portable.${ext}"
+    }
+  },
+  "license": "SEE LICENSE IN LICENSE"
+}

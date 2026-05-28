@@ -1,0 +1,12 @@
+lightrag-hku==1.2.6
+fastapi
+uvicorn
+python-multipart
+aiofiles
+pydantic
+pydantic-settings
+PyPDF2
+openai
+eval_type_backport
+numpy
+aiohttp

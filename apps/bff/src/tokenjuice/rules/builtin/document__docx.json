@@ -1,0 +1,37 @@
+{
+  "id": "document/docx",
+  "family": "document-docx",
+  "description": "Word document extraction output formatter",
+  "match": {
+    "toolNames": ["docx_extractor", "word_extractor", "extract_docx", "mammoth"]
+  },
+  "filters": {
+    "skipPatterns": [
+      "^\\s*$"
+    ],
+    "keepPatterns": []
+  },
+  "transforms": {
+    "stripAnsi": true,
+    "trimEmptyEdges": true,
+    "dedupeAdjacent": true
+  },
+  "summarize": {
+    "head": 40,
+    "tail": 15
+  },
+  "counters": [
+    {
+      "name": "headings",
+      "pattern": "^#"
+    },
+    {
+      "name": "lists",
+      "pattern": "^[-*]"
+    },
+    {
+      "name": "tables",
+      "pattern": "^\\|"
+    }
+  ]
+}

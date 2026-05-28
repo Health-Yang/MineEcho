@@ -1,0 +1,41 @@
+{
+  "id": "cargo/test",
+  "family": "cargo-test",
+  "description": "Cargo test output formatter",
+  "match": {
+    "argv0": ["cargo"],
+    "argvIncludesAny": [["test"]]
+  },
+  "filters": {
+    "skipPatterns": [
+      "^\\s*$",
+      "^Running.*$",
+      "^Building.*$",
+      "^Compiling.*$",
+      "^Doc-tests.*$"
+    ],
+    "keepPatterns": []
+  },
+  "transforms": {
+    "stripAnsi": true,
+    "trimEmptyEdges": true
+  },
+  "summarize": {
+    "head": 20,
+    "tail": 15
+  },
+  "counters": [
+    {
+      "name": "test",
+      "pattern": "^test\\s"
+    },
+    {
+      "name": "passed",
+      "pattern": "ok|running|passed"
+    },
+    {
+      "name": "failed",
+      "pattern": "FAILED|failed"
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+{
+  "id": "git/status",
+  "family": "git-status",
+  "description": "Git status output formatter",
+  "match": {
+    "argv0": ["git"],
+    "argvIncludesAny": [["status"]]
+  },
+  "filters": {
+    "skipPatterns": [
+      "^On branch .*$",
+      "^Your branch is .*$",
+      "^$",
+      "^no changes added to commit.*$",
+      "^nothing added to commit.*$",
+      "^\\(use \"git .+\"\\)$",
+      "^use \"git .+\" to .+$",
+      "^Changes not staged for commit:",
+      "^Changes to be committed:"
+    ],
+    "keepPatterns": [
+      "^\\s*[MADRCU?!]\\s",
+      "^\\?\\?\\s",
+      "^\\s*modified:\\s+",
+      "^\\s*new file:\\s+",
+      "^\\s*deleted:\\s+",
+      "^\\s*renamed:\\s+",
+      "^Staged changes:",
+      "^Untracked files:",
+      "^Changes not staged:"
+    ]
+  },
+  "transforms": {
+    "stripAnsi": true,
+    "trimEmptyEdges": true,
+    "dedupeAdjacent": true
+  },
+  "summarize": {
+    "head": 20,
+    "tail": 10
+  },
+  "counters": [
+    {
+      "name": "modified",
+      "pattern": "^\\s*[ M]\\s",
+      "flags": "i"
+    },
+    {
+      "name": "deleted",
+      "pattern": "^\\s*D\\s",
+      "flags": "i"
+    },
+    {
+      "name": "added",
+      "pattern": "^\\s*A\\s",
+      "flags": "i"
+    },
+    {
+      "name": "renamed",
+      "pattern": "^\\s*R\\s",
+      "flags": "i"
+    },
+    {
+      "name": "untracked",
+      "pattern": "^\\?\\?\\s"
+    }
+  ]
+}

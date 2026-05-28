@@ -1,0 +1,35 @@
+{
+  "id": "docker/logs",
+  "family": "docker-logs",
+  "description": "docker logs output formatter",
+  "match": {
+    "argv0": ["docker"],
+    "argvIncludesAny": [["logs"]]
+  },
+  "filters": {
+    "skipPatterns": [
+      "^\\d{4}-\\d{2}-\\d{2}T.*$"
+    ],
+    "keepPatterns": []
+  },
+  "transforms": {
+    "stripAnsi": true,
+    "trimEmptyEdges": true
+  },
+  "summarize": {
+    "head": 30,
+    "tail": 30
+  },
+  "counters": [
+    {
+      "name": "error",
+      "pattern": "\\berror\\b",
+      "flags": "i"
+    },
+    {
+      "name": "warn",
+      "pattern": "\\bwarn(ing)?\\b",
+      "flags": "i"
+    }
+  ]
+}

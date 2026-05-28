@@ -1,0 +1,51 @@
+# MineEcho + OpenClaw Gateway 容器化部署
+# 使用单容器（Gateway 与 BFF 同容器），避免跨容器 DNS 解析问题
+# 使用：docker compose up -d
+# 访问：http://127.0.0.1:${MINECHO_PORT:-3085}
+# 固定 token 由环境变量传入，BFF 与 Gateway 同容器内共用，避免配置文件路径/读写顺序导致 mismatch
+#
+# Workspace 工作目录配置（跨平台）：
+# - 默认挂载路径：./mineecho-workspaces（相对路径，兼容所有平台）
+# - 可通过环境变量 MINECHO_WORKSPACE_ROOT 自定义：
+#   macOS:   export MINECHO_WORKSPACE_ROOT=~/mineecho-workspaces
+#   Windows: set MINECHO_WORKSPACE_ROOT=C:\Users\<user>\mineecho-workspaces
+#   Linux:   export MINECHO_WORKSPACE_ROOT=~/.mineecho/workspaces
+# - 容器内挂载点：/app/workspace
+
+volumes:
+  openclaw-config:
+  mineecho-data:
+
+services:
+  mineecho:
+    build:
+      context: .
+      dockerfile: docker/mineecho-with-gateway/Dockerfile
+      args:
+        NODE_IMAGE: ${NODE_IMAGE:-swr.cn-north-4.myhuaweicloud.com/ddn-k8s/docker.io/node:22-alpine}
+    image: mineecho-terminal
+    environment:
+      BFF_PORT: "${BFF_PORT:-3085}"
+      CONSOLE_DIST: /app/console-dist
+      OPENCLAW_GATEWAY_URL: ws://127.0.0.1:${GATEWAY_PORT:-18790}
+      OPENCLAW_GATEWAY_TOKEN: "mineecho-in-container"
+      OPENCLAW_HOME: /app/.openclaw
+      OPENCLAW_GATEWAY_PORT: "${GATEWAY_PORT:-18790}"
+      MINECHO_CONFIG_HOME: /app/.mineecho
+      # L1 技能仓库地址（用于版本检查）
+      # macOS Docker: host.docker.internal | Linux: 172.17.0.1 (Docker bridge IP)
+      L1_URL: ${L1_URL:-http://host.docker.internal:3081}
+      # MINIMAX_API_KEY 可选：首次启动无需配置，用户可在 Web 界面初始化向导中配置
+      MINIMAX_API_KEY: ${MINIMAX_API_KEY:-}
+    volumes:
+      - openclaw-config:/app/.openclaw
+      - mineecho-data:/app/.mineecho
+      - ./workspace:/app/.openclaw/workspace
+      # 跨平台工作区挂载：支持 macOS/Windows/Linux
+      # 默认使用相对路径 ./mineecho-workspaces，可通过 MINECHO_WORKSPACE_ROOT 环境变量覆盖
+      - ${MINECHO_WORKSPACE_ROOT:-./mineecho-workspaces}:/app/workspace
+    ports:
+      - "${MINECHO_PORT:-3085}:${BFF_PORT:-3085}"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    restart: unless-stopped

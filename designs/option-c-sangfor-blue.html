@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MineEcho</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter', 'Noto Sans SC', 'sans-serif'] },
+          colors: {
+            sf: {
+              50: '#f5f7fa',
+              100: '#e8ecf1',
+              200: '#d1d9e3',
+              300: '#a8b8cc',
+              400: '#7894b0',
+              500: '#567a9c',
+              600: '#3d6182',
+              700: '#2d4d6b',
+              800: '#1e3a55',
+              900: '#122a40',
+            },
+            brand: {
+              50: '#e6f0ff',
+              100: '#b3d1ff',
+              200: '#80b3ff',
+              300: '#4d94ff',
+              400: '#1a75ff',
+              500: '#0066ff',
+              600: '#0052cc',
+              700: '#003d99',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    * { -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
+    body { background: #f5f7fa; color: #1f2329; }
+    ::-webkit-scrollbar { width: 4px; }
+    ::-webkit-scrollbar-thumb { background: #d1d9e3; border-radius: 2px; }
+
+    /* Cards */
+    .sf-card {
+      background: #fff;
+      border-radius: 12px;
+      border: 1px solid #e8ecf1;
+      transition: border-color 0.15s ease, box-shadow 0.15s ease;
+    }
+    .sf-card:hover {
+      border-color: #b3d1ff;
+      box-shadow: 0 2px 12px rgba(0,102,255,0.06);
+    }
+
+    /* Nav */
+    .nav-item {
+      border-radius: 8px;
+      transition: all 0.15s ease;
+    }
+    .nav-item.active {
+      background: #e6f0ff;
+      color: #0066ff;
+      font-weight: 600;
+    }
+    .nav-item:not(.active):hover {
+      background: #f5f7fa;
+      color: #1f2329;
+    }
+
+    /* Page transition - only opacity, no transform */
+    .page-transition {
+      animation: fadeOnly 0.25s ease forwards;
+    }
+    @keyframes fadeOnly {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
+    /* Messages */
+    .msg-ai {
+      border-radius: 12px 12px 12px 4px;
+      background: #fff;
+      border: 1px solid #e8ecf1;
+    }
+    .msg-user {
+      border-radius: 12px 12px 4px 12px;
+      background: #0066ff;
+      color: #fff;
+    }
+
+    /* Graph */
+    .graph-line {
+      stroke: #d1d9e3;
+      stroke-width: 1.5;
+    }
+    .graph-node {
+      cursor: pointer;
+      transition: opacity 0.2s ease;
+    }
+    .graph-node:hover {
+      opacity: 0.85;
+    }
+
+    /* Buttons */
+    .btn-primary {
+      background: #0066ff;
+      color: #fff;
+      transition: background 0.15s ease;
+    }
+    .btn-primary:hover { background: #0052cc; }
+    .btn-primary:active { background: #003d99; }
+
+    .btn-ghost {
+      background: #fff;
+      border: 1px solid #e8ecf1;
+      color: #646a73;
+      transition: all 0.15s ease;
+    }
+    .btn-ghost:hover {
+      border-color: #0066ff;
+      color: #0066ff;
+    }
+
+    /* Toggle */
+    .toggle:checked + div {
+      background: #0066ff;
+    }
+    .toggle:checked + div:after {
+      transform: translateX(20px);
+    }
+
+    /* Status dot */
+    .status-on {
+      width: 8px; height: 8px;
+      border-radius: 50%;
+      background: #00b365;
+      box-shadow: 0 0 0 2px rgba(0,179,101,0.15);
+    }
+
+    /* Input focus */
+    .input-wrap:focus-within {
+      border-color: #0066ff;
+      box-shadow: 0 0 0 3px rgba(0,102,255,0.08);
+    }
+  </style>
+</head>
+<body class="h-screen overflow-hidden font-sans">
+  <div class="flex h-full">
+
+    <!-- Sidebar -->
+    <aside class="w-[200px] flex flex-col bg-white border-r border-sf-200">
+      <!-- Logo -->
+      <div class="h-14 flex items-center px-4 gap-2.5 border-b border-sf-100">
+        <div class="w-8 h-8 rounded-lg bg-brand-500 flex items-center justify-center">
+          <svg class="w-5 h-5 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round">
+            <path d="M12 3c-4.5 0-8 3.5-8 8 0 5.25 8 10 8 10s8-4.75 8-10c0-4.5-3.5-8-8-8z"/>
+            <circle cx="12" cy="11" r="2.5" fill="white" stroke="none"/>
+          </svg>
+        </div>
+        <div>
+          <h1 class="text-base font-bold text-sf-900">MineEcho</h1>
+          <p class="text-[10px] text-sf-400 -mt-0.5">AI 智能助手</p>
+        </div>
+      </div>
+
+      <!-- Session -->
+      <div class="px-3 py-3">
+        <div class="sf-card px-3 py-2.5 flex items-center justify-between cursor-pointer">
+          <div class="flex items-center gap-2">
+            <div class="w-6 h-6 rounded bg-brand-50 flex items-center justify-center text-xs">💬</div>
+            <span class="text-sm text-sf-700">工作会话</span>
+          </div>
+          <svg class="w-4 h-4 text-sf-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 9l-7 7-7-7"/></svg>
+        </div>
+        <button class="w-full mt-2 py-2 rounded-lg border border-dashed border-sf-200 text-xs text-sf-400 hover:border-brand-300 hover:text-brand-500 transition-colors flex items-center justify-center gap-1">
+          <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg>
+          新建会话
+        </button>
+      </div>
+
+      <!-- Nav -->
+      <nav class="flex-1 px-3 space-y-0.5 overflow-y-auto">
+        <a href="#chat" onclick="switchTab('chat')" id="nav-chat" class="nav-item active flex items-center gap-2.5 px-3 py-2.5 text-sm transition-all">
+          <span class="text-base">💬</span> <span>聊天</span>
+        </a>
+        <a href="#skills" onclick="switchTab('skills')" id="nav-skills" class="nav-item flex items-center gap-2.5 px-3 py-2.5 text-sm text-sf-500 transition-all">
+          <span class="text-base">🌳</span> <span>技能中心</span>
+          <span class="ml-auto bg-brand-500 text-white text-[10px] px-1.5 py-0.5 rounded font-medium">3</span>
+        </a>
+        <a href="#knowledge" onclick="switchTab('knowledge')" id="nav-knowledge" class="nav-item flex items-center gap-2.5 px-3 py-2.5 text-sm text-sf-500 transition-all">
+          <span class="text-base">📚</span> <span>知识库</span>
+        </a>
+        <a href="#memory" onclick="switchTab('memory')" id="nav-memory" class="nav-item flex items-center gap-2.5 px-3 py-2.5 text-sm text-sf-500 transition-all">
+          <span class="text-base">🧠</span> <span>我的记忆</span>
+        </a>
+        <a href="#config" onclick="switchTab('config')" id="nav-config" class="nav-item flex items-center gap-2.5 px-3 py-2.5 text-sm text-sf-500 transition-all">
+          <span class="text-base">⚙️</span> <span>设置</span>
+        </a>
+      </nav>
+
+      <!-- Status -->
+      <div class="p-3 border-t border-sf-100">
+        <div class="sf-card p-3 space-y-2.5">
+          <div class="flex items-center justify-between">
+            <span class="text-[11px] text-sf-400">Gateway</span>
+            <span class="text-[11px] font-medium text-green-600 flex items-center gap-1.5">
+              <span class="status-on"></span>已连接
+            </span>
+          </div>
+          <div class="w-full h-1 bg-sf-100 rounded-full overflow-hidden">
+            <div class="h-full bg-brand-500 rounded-full" style="width:85%"></div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="flex-1 overflow-hidden relative">
+
+      <!-- Chat Page -->
+      <div id="page-chat" class="h-full flex flex-col page-transition">
+        <header class="h-14 px-6 flex items-center justify-between bg-white border-b border-sf-100">
+          <div class="flex items-center gap-2.5">
+            <div class="w-8 h-8 rounded-lg bg-brand-50 flex items-center justify-center text-sm">🦊</div>
+            <div>
+              <h2 class="text-sm font-semibold text-sf-900">MineEcho</h2>
+              <p class="text-[10px] text-sf-400 flex items-center gap-1">
+                <span class="status-on" style="width:5px;height:5px;"></span>在线
+              </p>
+            </div>
+          </div>
+          <div class="flex gap-1.5">
+            <button class="px-3 py-1.5 rounded-lg btn-ghost text-xs font-medium">通用</button>
+            <button class="px-3 py-1.5 rounded-lg btn-ghost text-xs font-medium">💻 代码</button>
+            <button class="px-3 py-1.5 rounded-lg btn-ghost text-xs font-medium">🚀 Agent</button>
+            <button class="px-3 py-1.5 rounded-lg btn-ghost text-xs font-medium">💡 灵感</button>
+          </div>
+        </header>
+
+        <div class="flex-1 overflow-y-auto px-6 py-5 space-y-5">
+          <div class="flex gap-3">
+            <div class="w-8 h-8 rounded-lg bg-brand-500 flex items-center justify-center text-white text-xs font-bold shrink-0">S</div>
+            <div class="msg-ai px-4 py-3 max-w-[70%]">
+              <p class="text-sm leading-relaxed text-sf-700">你好！我是 MineEcho，你的职场 AI 助手。今天有什么可以帮你的？</p>
+              <span class="text-[10px] text-sf-400 mt-1.5 block">10:23</span>
+            </div>
+          </div>
+
+          <div class="flex gap-3 justify-end">
+            <div class="msg-user px-4 py-3 max-w-[70%]">
+              <p class="text-sm leading-relaxed">帮我写一个Python脚本分析CSV销售数据</p>
+              <span class="text-[10px] text-white/60 mt-1.5 block text-right">10:24</span>
+            </div>
+          </div>
+
+          <div class="flex gap-3">
+            <div class="w-8 h-8 rounded-lg bg-brand-500 flex items-center justify-center text-white text-xs font-bold shrink-0">S</div>
+            <div class="max-w-[75%]">
+              <div class="msg-ai px-4 py-3 mb-2">
+                <p class="text-sm leading-relaxed text-sf-700">没问题！这是一个数据分析脚本，支持按月汇总和可视化。</p>
+              </div>
+              <div class="bg-sf-900 rounded-xl p-4 overflow-x-auto border border-sf-800">
+                <div class="flex items-center gap-2 mb-2">
+                  <span class="text-[10px] text-sf-400 font-mono">sales_analysis.py</span>
+                  <button class="ml-auto text-[10px] text-sf-400 hover:text-brand-300 transition-colors">复制</button>
+                </div>
+                <pre class="text-xs text-sf-300 leading-relaxed font-mono"><code>import pandas as pd
+import matplotlib.pyplot as plt
+
+def analyze_sales(csv_path):
+    df = pd.read_csv(csv_path)
+    df['date'] = pd.to_datetime(df['date'])
+    monthly = df.groupby(df['date'].dt.to_period('M'))['amount'].sum()
+    return monthly</code></pre>
+              </div>
+              <span class="text-[10px] text-sf-400 mt-1 block">10:25</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="px-6 pb-4">
+          <div class="sf-card p-1 input-wrap transition-all">
+            <div class="flex items-end gap-2 px-4 py-2.5">
+              <button class="p-1.5 rounded-lg hover:bg-sf-50 text-sf-400 hover:text-brand-500 transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15.172 7l-6.586 6.586a2 2 0 102.828 2.828l6.414-6.586a4 4 0 00-5.656-5.656l-6.415 6.585a6 6 0 108.486 8.486L20.5 13"/></svg>
+              </button>
+              <textarea class="flex-1 bg-transparent text-sm resize-none outline-none text-sf-700 placeholder-sf-300 py-1.5" rows="1" placeholder="输入消息..."></textarea>
+              <button class="px-4 py-1.5 rounded-lg btn-primary text-xs font-medium">发送</button>
+            </div>
+          </div>
+          <p class="text-center text-[10px] text-sf-300 mt-1.5">MineEcho 生成的内容仅供参考，请核实重要信息</p>
+        </div>
+      </div>
+
+      <!-- Skills Page -->
+      <div id="page-skills" class="h-full overflow-y-auto hidden">
+        <div class="max-w-5xl mx-auto px-6 py-6 page-transition">
+          <div class="mb-6">
+            <h2 class="text-xl font-bold text-sf-900 mb-0.5">技能中心</h2>
+            <p class="text-sm text-sf-400">管理和发现提升工作效率的AI技能</p>
+          </div>
+
+          <div class="flex gap-2 mb-5">
+            <div class="flex-1 sf-card px-4 py-2 flex items-center gap-2">
+              <svg class="w-4 h-4 text-sf-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="M21 21l-4.35-4.35"/></svg>
+              <input type="text" class="bg-transparent outline-none text-sm flex-1 text-sf-700 placeholder-sf-300" placeholder="搜索技能...">
+            </div>
+            <button class="sf-card px-4 py-2 text-xs font-medium text-sf-500 hover:text-brand-500 hover:border-brand-200 transition-colors">已安装</button>
+            <button class="sf-card px-4 py-2 text-xs font-medium text-brand-500 border-brand-200 bg-brand-50">商店</button>
+          </div>
+
+          <div class="mb-6">
+            <h3 class="text-xs font-semibold text-sf-500 uppercase tracking-wider mb-3">已安装</h3>
+            <div class="grid grid-cols-4 gap-3">
+              <div class="sf-card p-4 cursor-pointer">
+                <div class="flex items-start justify-between mb-2.5">
+                  <div class="w-10 h-10 rounded-lg bg-blue-500/10 flex items-center justify-center text-lg">📊</div>
+                  <span class="text-[10px] bg-green-50 text-green-600 px-2 py-0.5 rounded font-medium">运行中</span>
+                </div>
+                <h4 class="text-sm font-semibold text-sf-800 mb-0.5">数据分析助手</h4>
+                <p class="text-[11px] text-sf-400 mb-2.5">Excel/CSV 自动分析与图表</p>
+                <div class="flex items-center justify-between">
+                  <span class="text-[10px] text-sf-300">v2.1.0</span>
+                  <button class="text-[11px] text-brand-500 hover:text-brand-600 font-medium">配置</button>
+                </div>
+              </div>
+              <div class="sf-card p-4 cursor-pointer">
+                <div class="flex items-start justify-between mb-2.5">
+                  <div class="w-10 h-10 rounded-lg bg-purple-500/10 flex items-center justify-center text-lg">✍️</div>
+                  <span class="text-[10px] bg-green-50 text-green-600 px-2 py-0.5 rounded font-medium">运行中</span>
+                </div>
+                <h4 class="text-sm font-semibold text-sf-800 mb-0.5">文案生成器</h4>
+                <p class="text-[11px] text-sf-400 mb-2.5">营销文案、邮件、社媒内容</p>
+                <div class="flex items-center justify-between">
+                  <span class="text-[10px] text-sf-300">v1.5.2</span>
+                  <button class="text-[11px] text-brand-500 hover:text-brand-600 font-medium">配置</button>
+                </div>
+              </div>
+              <div class="sf-card p-4 cursor-pointer">
+                <div class="flex items-start justify-between mb-2.5">
+                  <div class="w-10 h-10 rounded-lg bg-emerald-500/10 flex items-center justify-center text-lg">🐛</div>
+                  <span class="text-[10px] bg-green-50 text-green-600 px-2 py-0.5 rounded font-medium">运行中</span>
+                </div>
+                <h4 class="text-sm font-semibold text-sf-800 mb-0.5">代码审查</h4>
+                <p class="text-[11px] text-sf-400 mb-2.5">代码质量与安全问题检测</p>
+                <div class="flex items-center justify-between">
+                  <span class="text-[10px] text-sf-300">v3.0.1</span>
+                  <button class="text-[11px] text-brand-500 hover:text-brand-600 font-medium">配置</button>
+                </div>
+              </div>
+              <div class="sf-card p-4 cursor-pointer">
+                <div class="flex items-start justify-between mb-2.5">
+                  <div class="w-10 h-10 rounded-lg bg-amber-500/10 flex items-center justify-center text-lg">📅</div>
+                  <span class="text-[10px] bg-amber-50 text-amber-600 px-2 py-0.5 rounded font-medium">可更新</span>
+                </div>
+                <h4 class="text-sm font-semibold text-sf-800 mb-0.5">日程规划师</h4>
+                <p class="text-[11px] text-sf-400 mb-2.5">智能任务优先级与排期</p>
+                <div class="flex items-center justify-between">
+                  <span class="text-[10px] text-sf-300">v1.2 → v2.0</span>
+                  <button class="text-[11px] text-amber-500 hover:text-amber-600 font-medium">更新</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <h3 class="text-xs font-semibold text-sf-500 uppercase tracking-wider mb-3">AI 应用工作流</h3>
+          <div class="grid grid-cols-2 gap-3">
+            <div class="sf-card p-4 cursor-pointer border-l-2 border-l-brand-400">
+              <div class="flex items-center gap-2.5 mb-2">
+                <div class="w-8 h-8 rounded-lg bg-orange-500/10 flex items-center justify-center text-sm">📧</div>
+                <div>
+                  <h4 class="text-sm font-semibold text-sf-800">日报生成器</h4>
+                  <p class="text-[10px] text-sf-400">自动汇总工作内容生成日报</p>
+                </div>
+              </div>
+              <div class="flex gap-1.5">
+                <span class="text-[10px] bg-sf-50 text-sf-500 px-2 py-0.5 rounded">data-analyzer</span>
+                <span class="text-[10px] bg-sf-50 text-sf-500 px-2 py-0.5 rounded">copywriter</span>
+              </div>
+            </div>
+            <div class="sf-card p-4 cursor-pointer border-l-2 border-l-brand-400">
+              <div class="flex items-center gap-2.5 mb-2">
+                <div class="w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center text-sm">🎯</div>
+                <div>
+                  <h4 class="text-sm font-semibold text-sf-800">会议纪要整理</h4>
+                  <p class="text-[10px] text-sf-400">录音转文字 + 提取待办事项</p>
+                </div>
+              </div>
+              <div class="flex gap-1.5">
+                <span class="text-[10px] bg-sf-50 text-sf-500 px-2 py-0.5 rounded">voice</span>
+                <span class="text-[10px] bg-sf-50 text-sf-500 px-2 py-0.5 rounded">scheduler</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Knowledge Page -->
+      <div id="page-knowledge" class="h-full overflow-y-auto hidden">
+        <div class="h-full flex page-transition">
+          <div class="w-64 border-r border-sf-100 bg-white p-4">
+            <h3 class="text-xs font-semibold text-sf-500 uppercase tracking-wider mb-3">文档</h3>
+            <div class="sf-card border-dashed p-4 text-center cursor-pointer hover:border-brand-300 transition-colors mb-4">
+              <svg class="w-6 h-6 text-sf-300 mx-auto mb-2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"/></svg>
+              <p class="text-xs text-sf-500">拖拽文件到此处</p>
+              <p class="text-[10px] text-sf-300 mt-0.5">PDF, DOCX, TXT, MD</p>
+            </div>
+            <div class="space-y-1">
+              <div class="flex items-center gap-2 px-2 py-2 rounded-lg hover:bg-sf-50 cursor-pointer">
+                <span class="text-sm">📄</span>
+                <div class="flex-1 min-w-0">
+                  <p class="text-xs text-sf-700 truncate">PRD_v3.pdf</p>
+                  <p class="text-[10px] text-sf-300">2.3MB</p>
+                </div>
+                <span class="text-[10px] bg-green-50 text-green-600 px-1.5 py-0.5 rounded">OK</span>
+              </div>
+              <div class="flex items-center gap-2 px-2 py-2 rounded-lg hover:bg-sf-50 cursor-pointer">
+                <span class="text-sm">📊</span>
+                <div class="flex-1 min-w-0">
+                  <p class="text-xs text-sf-700 truncate">Q3_sales.xlsx</p>
+                  <p class="text-[10px] text-sf-300">856KB</p>
+                </div>
+                <span class="text-[10px] bg-green-50 text-green-600 px-1.5 py-0.5 rounded">OK</span>
+              </div>
+              <div class="flex items-center gap-2 px-2 py-2 rounded-lg hover:bg-sf-50 cursor-pointer">
+                <span class="text-sm">📝</span>
+                <div class="flex-1 min-w-0">
+                  <p class="text-xs text-sf-700 truncate">architecture.md</p>
+                  <p class="text-[10px] text-sf-300">45KB</p>
+                </div>
+                <span class="text-[10px] bg-amber-50 text-amber-600 px-1.5 py-0.5 rounded">IDX</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex-1 p-4">
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="text-xs font-semibold text-sf-500 uppercase tracking-wider">知识图谱</h3>
+              <div class="flex gap-1">
+                <button class="text-[11px] px-3 py-1 rounded-md bg-brand-50 text-brand-500 font-medium">全部</button>
+                <button class="text-[11px] px-3 py-1 rounded-md text-sf-400 hover:bg-sf-50 transition-colors">产品</button>
+                <button class="text-[11px] px-3 py-1 rounded-md text-sf-400 hover:bg-sf-50 transition-colors">技术</button>
+                <button class="text-[11px] px-3 py-1 rounded-md text-sf-400 hover:bg-sf-50 transition-colors">业务</button>
+              </div>
+            </div>
+            <div class="sf-card h-[calc(100%-2rem)] relative overflow-hidden">
+              <svg class="w-full h-full" viewBox="0 0 700 450">
+                <!-- Edges -->
+                <line class="graph-line" x1="350" y1="225" x2="200" y2="120"/>
+                <line class="graph-line" x1="350" y1="225" x2="500" y2="120"/>
+                <line class="graph-line" x1="350" y1="225" x2="200" y2="330"/>
+                <line class="graph-line" x1="350" y1="225" x2="500" y2="330"/>
+                <line class="graph-line" x1="350" y1="225" x2="350" y2="60"/>
+                <line class="graph-line" x1="350" y1="225" x2="350" y2="390"/>
+                <line class="graph-line" x1="200" y1="120" x2="120" y2="70"/>
+                <line class="graph-line" x1="200" y1="120" x2="140" y2="170"/>
+                <line class="graph-line" x1="500" y1="120" x2="580" y2="70"/>
+                <line class="graph-line" x1="500" y1="120" x2="560" y2="170"/>
+
+                <!-- Central Node -->
+                <g class="graph-node">
+                  <circle cx="350" cy="225" r="30" fill="#0066ff" opacity="0.9"/>
+                  <circle cx="350" cy="225" r="36" fill="none" stroke="#0066ff" stroke-width="1.5" opacity="0.2"/>
+                  <text x="350" y="230" text-anchor="middle" fill="white" font-size="12" font-weight="700">MineEcho</text>
+                </g>
+
+                <!-- Product Nodes -->
+                <g class="graph-node">
+                  <circle cx="200" cy="120" r="24" fill="#1a75ff" opacity="0.85"/>
+                  <text x="200" y="124" text-anchor="middle" fill="white" font-size="9" font-weight="600">产品需求</text>
+                </g>
+                <g class="graph-node">
+                  <circle cx="120" cy="70" r="16" fill="#4d94ff" opacity="0.7"/>
+                  <text x="120" y="73" text-anchor="middle" fill="white" font-size="7">用户画像</text>
+                </g>
+                <g class="graph-node">
+                  <circle cx="140" cy="170" r="16" fill="#4d94ff" opacity="0.7"/>
+                  <text x="140" y="173" text-anchor="middle" fill="white" font-size="7">功能列表</text>
+                </g>
+
+                <!-- Tech Nodes -->
+                <g class="graph-node">
+                  <circle cx="500" cy="120" r="24" fill="#00b365" opacity="0.85"/>
+                  <text x="500" y="124" text-anchor="middle" fill="white" font-size="9" font-weight="600">技术架构</text>
+                </g>
+                <g class="graph-node">
+                  <circle cx="580" cy="70" r="16" fill="#33c285" opacity="0.7"/>
+                  <text x="580" y="73" text-anchor="middle" fill="white" font-size="7">数据库</text>
+                </g>
+                <g class="graph-node">
+                  <circle cx="560" cy="170" r="16" fill="#33c285" opacity="0.7"/>
+                  <text x="560" y="173" text-anchor="middle" fill="white" font-size="7">API设计</text>
+                </g>
+
+                <!-- Business Nodes -->
+                <g class="graph-node">
+                  <circle cx="200" cy="330" r="24" fill="#f5a623" opacity="0.85"/>
+                  <text x="200" y="334" text-anchor="middle" fill="white" font-size="9" font-weight="600">业务流程</text>
+                </g>
+                <g class="graph-node">
+                  <circle cx="500" cy="330" r="24" fill="#f5a623" opacity="0.85"/>
+                  <text x="500" y="334" text-anchor="middle" fill="white" font-size="9" font-weight="600">销售数据</text>
+                </g>
+                <g class="graph-node">
+                  <circle cx="350" cy="60" r="20" fill="#a855f7" opacity="0.75"/>
+                  <text x="350" y="64" text-anchor="middle" fill="white" font-size="8">竞品分析</text>
+                </g>
+                <g class="graph-node">
+                  <circle cx="350" cy="390" r="20" fill="#ec4899" opacity="0.75"/>
+                  <text x="350" y="394" text-anchor="middle" fill="white" font-size="8">客户反馈</text>
+                </g>
+              </svg>
+              <div class="absolute bottom-4 left-4 flex gap-4">
+                <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#1a75ff]"></span><span class="text-[10px] text-sf-400">产品</span></div>
+                <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#00b365]"></span><span class="text-[10px] text-sf-400">技术</span></div>
+                <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#f5a623]"></span><span class="text-[10px] text-sf-400">业务</span></div>
+                <div class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[#a855f7]"></span><span class="text-[10px] text-sf-400">市场</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Memory Page -->
+      <div id="page-memory" class="h-full overflow-y-auto hidden">
+        <div class="max-w-5xl mx-auto px-6 py-6 page-transition">
+          <div class="mb-6">
+            <h2 class="text-xl font-bold text-sf-900 mb-0.5">我的记忆</h2>
+            <p class="text-sm text-sf-400">MineEcho 正在了解你，为你提供更好的服务</p>
+          </div>
+
+          <div class="sf-card p-5 mb-5 border-l-4 border-l-green-500">
+            <div class="flex items-center justify-between">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-lg bg-green-50 flex items-center justify-center text-lg">💚</div>
+                <div>
+                  <h3 class="text-sm font-semibold text-sf-800">工作状态良好</h3>
+                  <p class="text-[11px] text-sf-400">今日工作强度评分: 32/100</p>
+                </div>
+              </div>
+              <div class="w-16 h-16 relative">
+                <svg class="w-full h-full -rotate-90" viewBox="0 0 36 36">
+                  <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#e8ecf1" stroke-width="3"/>
+                  <path d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" fill="none" stroke="#00b365" stroke-width="3" stroke-dasharray="32, 100"/>
+                </svg>
+                <span class="absolute inset-0 flex items-center justify-center text-sm font-bold text-green-600">32</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-4 mb-5">
+            <div class="sf-card p-5">
+              <h3 class="text-sm font-semibold text-sf-700 mb-4">能力雷达</h3>
+              <svg class="w-full h-44" viewBox="0 0 300 180">
+                <polygon points="150,15 240,65 240,145 150,185 60,145 60,65" fill="none" stroke="#e8ecf1" stroke-width="1"/>
+                <polygon points="150,50 205,80 195,130 150,155 105,130 95,80" fill="none" stroke="#e8ecf1" stroke-width="1"/>
+                <polygon points="150,85 162,95 162,115 150,125 138,115 138,95" fill="none" stroke="#e8ecf1" stroke-width="1"/>
+                <polygon points="150,35 210,80 200,140 150,175 90,145 85,75" fill="rgba(0,102,255,0.08)" stroke="#0066ff" stroke-width="1.5"/>
+                <circle cx="150" cy="35" r="3" fill="#0066ff"/><text x="150" y="20" text-anchor="middle" font-size="8" fill="#646a73">技术</text>
+                <circle cx="210" cy="80" r="3" fill="#0066ff"/><text x="235" y="80" text-anchor="start" font-size="8" fill="#646a73">沟通</text>
+                <circle cx="200" cy="140" r="3" fill="#0066ff"/><text x="225" y="145" text-anchor="start" font-size="8" fill="#646a73">管理</text>
+                <circle cx="150" cy="175" r="3" fill="#0066ff"/><text x="150" y="195" text-anchor="middle" font-size="8" fill="#646a73">创新</text>
+                <circle cx="90" cy="145" r="3" fill="#0066ff"/><text x="60" y="150" text-anchor="end" font-size="8" fill="#646a73">效率</text>
+                <circle cx="85" cy="75" r="3" fill="#0066ff"/><text x="55" y="80" text-anchor="end" font-size="8" fill="#646a73">学习</text>
+              </svg>
+            </div>
+            <div class="sf-card p-5">
+              <h3 class="text-sm font-semibold text-sf-700 mb-4">最近里程碑</h3>
+              <div class="space-y-3">
+                <div class="flex gap-3">
+                  <div class="w-7 h-7 rounded-lg bg-orange-50 flex items-center justify-center text-xs shrink-0">🏆</div>
+                  <div>
+                    <p class="text-xs font-medium text-sf-700">代码大师</p>
+                    <p class="text-[10px] text-sf-400">累计生成超过1000行代码</p>
+                    <p class="text-[10px] text-sf-300">3天前</p>
+                  </div>
+                </div>
+                <div class="flex gap-3">
+                  <div class="w-7 h-7 rounded-lg bg-blue-50 flex items-center justify-center text-xs shrink-0">📚</div>
+                  <div>
+                    <p class="text-xs font-medium text-sf-700">知识建构者</p>
+                    <p class="text-[10px] text-sf-400">上传了50份文档到知识库</p>
+                    <p class="text-[10px] text-sf-300">1周前</p>
+                  </div>
+                </div>
+                <div class="flex gap-3">
+                  <div class="w-7 h-7 rounded-lg bg-purple-50 flex items-center justify-center text-xs shrink-0">⚡</div>
+                  <div>
+                    <p class="text-xs font-medium text-sf-700">效率达人</p>
+                    <p class="text-[10px] text-sf-400">连续7天使用AI技能处理工作</p>
+                    <p class="text-[10px] text-sf-300">2周前</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="sf-card p-5">
+            <h3 class="text-sm font-semibold text-sf-700 mb-4">我的偏好</h3>
+            <div class="grid grid-cols-3 gap-3">
+              <div class="p-3 rounded-lg bg-sf-50">
+                <p class="text-xs text-sf-400 mb-1.5">常用编程语言</p>
+                <div class="flex flex-wrap gap-1.5">
+                  <span class="text-[11px] bg-white text-brand-500 px-2 py-1 rounded border border-sf-100">Python</span>
+                  <span class="text-[11px] bg-white text-brand-500 px-2 py-1 rounded border border-sf-100">TypeScript</span>
+                  <span class="text-[11px] bg-white text-sf-500 px-2 py-1 rounded border border-sf-100">Go</span>
+                </div>
+              </div>
+              <div class="p-3 rounded-lg bg-sf-50">
+                <p class="text-xs text-sf-400 mb-1.5">工作领域</p>
+                <div class="flex flex-wrap gap-1.5">
+                  <span class="text-[11px] bg-white text-brand-500 px-2 py-1 rounded border border-sf-100">后端开发</span>
+                  <span class="text-[11px] bg-white text-brand-500 px-2 py-1 rounded border border-sf-100">数据分析</span>
+                </div>
+              </div>
+              <div class="p-3 rounded-lg bg-sf-50">
+                <p class="text-xs text-sf-400 mb-1.5">沟通风格</p>
+                <p class="text-sm font-medium text-sf-700">简洁直接</p>
+                <p class="text-[10px] text-sf-400">偏好简短、有重点的回复</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Config Page -->
+      <div id="page-config" class="h-full overflow-y-auto hidden">
+        <div class="max-w-2xl mx-auto px-6 py-6 page-transition">
+          <div class="mb-6">
+            <h2 class="text-xl font-bold text-sf-900 mb-0.5">设置</h2>
+            <p class="text-sm text-sf-400">个性化你的 MineEcho 体验</p>
+          </div>
+
+          <div class="space-y-3">
+            <div class="sf-card p-5">
+              <div class="flex items-center justify-between mb-4">
+                <div class="flex items-center gap-3">
+                  <div class="w-9 h-9 rounded-lg bg-brand-50 flex items-center justify-center text-sm">🔑</div>
+                  <div>
+                    <h3 class="text-sm font-semibold text-sf-800">模型配置</h3>
+                    <p class="text-[11px] text-sf-400">选择你偏好的AI模型</p>
+                  </div>
+                </div>
+                <span class="text-[10px] bg-green-50 text-green-600 px-2 py-0.5 rounded font-medium">已配置</span>
+              </div>
+              <div class="space-y-3">
+                <div>
+                  <label class="text-[11px] text-sf-400 mb-1 block">模型提供商</label>
+                  <select class="w-full rounded-lg border border-sf-200 px-3 py-2 text-sm bg-white outline-none focus:border-brand-400 transition-colors">
+                    <option>OpenAI</option>
+                    <option>Anthropic</option>
+                    <option>Azure OpenAI</option>
+                    <option>本地模型</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="text-[11px] text-sf-400 mb-1 block">API Key</label>
+                  <input type="password" value="sk-••••••••••••••••" class="w-full rounded-lg border border-sf-200 px-3 py-2 text-sm bg-sf-50 outline-none" readonly>
+                </div>
+              </div>
+            </div>
+
+            <div class="sf-card p-5">
+              <div class="flex items-center gap-3 mb-4">
+                <div class="w-9 h-9 rounded-lg bg-pink-50 flex items-center justify-center text-sm">🎨</div>
+                <div>
+                  <h3 class="text-sm font-semibold text-sf-800">外观</h3>
+                  <p class="text-[11px] text-sf-400">自定义界面主题</p>
+                </div>
+              </div>
+              <div class="flex gap-2.5">
+                <div class="flex-1 p-3 rounded-lg bg-white border-2 border-brand-400 cursor-pointer">
+                  <div class="w-full h-10 rounded-md bg-gradient-to-br from-brand-50 to-brand-100 mb-2"></div>
+                  <p class="text-[11px] font-medium text-center text-sf-700">科技蓝</p>
+                </div>
+                <div class="flex-1 p-3 rounded-lg bg-white border border-sf-200 cursor-pointer hover:border-sf-300 transition-colors">
+                  <div class="w-full h-10 rounded-md bg-gradient-to-br from-sf-800 to-sf-900 mb-2"></div>
+                  <p class="text-[11px] font-medium text-center text-sf-700">深色</p>
+                </div>
+                <div class="flex-1 p-3 rounded-lg bg-white border border-sf-200 cursor-pointer hover:border-sf-300 transition-colors">
+                  <div class="w-full h-10 rounded-md bg-gradient-to-br from-sf-50 to-sf-100 mb-2"></div>
+                  <p class="text-[11px] font-medium text-center text-sf-700">浅色</p>
+                </div>
+              </div>
+            </div>
+
+            <div class="sf-card p-5">
+              <div class="flex items-center gap-3 mb-4">
+                <div class="w-9 h-9 rounded-lg bg-amber-50 flex items-center justify-center text-sm">🦊</div>
+                <div>
+                  <h3 class="text-sm font-semibold text-sf-800">伴侣设置</h3>
+                  <p class="text-[11px] text-sf-400">调整 MineEcho 的关心频率</p>
+                </div>
+              </div>
+              <div class="space-y-2">
+                <div class="flex items-center justify-between py-2">
+                  <span class="text-sm text-sf-700">Burnout 检测</span>
+                  <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" checked class="sr-only peer toggle">
+                    <div class="w-10 h-5 bg-sf-200 peer-focus:outline-none rounded-full peer after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-sf-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-5"></div>
+                  </label>
+                </div>
+                <div class="flex items-center justify-between py-2">
+                  <span class="text-sm text-sf-700">工作提醒</span>
+                  <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" checked class="sr-only peer toggle">
+                    <div class="w-10 h-5 bg-sf-200 peer-focus:outline-none rounded-full peer after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-sf-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:after:translate-x-5"></div>
+                  </label>
+                </div>
+                <div class="flex items-center justify-between py-2">
+                  <span class="text-sm text-sf-700">成长报告</span>
+                  <select class="rounded-lg border border-sf-200 px-2.5 py-1.5 text-xs bg-white outline-none">
+                    <option>每周</option>
+                    <option>每月</option>
+                    <option>关闭</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    function switchTab(tab) {
+      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+      document.getElementById('nav-' + tab).classList.add('active');
+      document.querySelectorAll('[id^="page-"]').forEach(el => el.classList.add('hidden'));
+      document.getElementById('page-' + tab).classList.remove('hidden');
+    }
+  </script>
+</body>
+</html>

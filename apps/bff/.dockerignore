@@ -1,0 +1,10 @@
+node_modules
+.git
+.healthclaw
+.openclaw
+*.log
+.DS_Store
+bff/dist
+console/dist
+.env
+.env.*

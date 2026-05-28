@@ -1,0 +1,38 @@
+{
+  "id": "git/diff",
+  "family": "git-diff",
+  "description": "Git diff output formatter",
+  "match": {
+    "argv0": ["git"],
+    "argvIncludesAny": [["diff"]]
+  },
+  "filters": {
+    "skipPatterns": [
+      "^diff --git.*$",
+      "^index [a-f0-9]+\\.[a-f0-9]+.*$",
+      "^---\\s",
+      "^\\+\\+\\+\\s",
+      "^\\s*$"
+    ],
+    "keepPatterns": []
+  },
+  "transforms": {
+    "stripAnsi": true,
+    "trimEmptyEdges": true,
+    "dedupeAdjacent": false
+  },
+  "summarize": {
+    "head": 30,
+    "tail": 10
+  },
+  "counters": [
+    {
+      "name": "additions",
+      "pattern": "^\\+[^+]"
+    },
+    {
+      "name": "deletions",
+      "pattern": "^-[^-]"
+    }
+  ]
+}

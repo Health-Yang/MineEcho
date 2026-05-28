@@ -1,0 +1,34 @@
+{
+  "id": "document/pdf",
+  "family": "document-pdf",
+  "description": "PDF document extraction output formatter",
+  "match": {
+    "toolNames": ["pdf_parse", "pdf_extractor", "extract_pdf"]
+  },
+  "filters": {
+    "skipPatterns": [
+      "^\\s*$"
+    ],
+    "keepPatterns": []
+  },
+  "transforms": {
+    "stripAnsi": true,
+    "trimEmptyEdges": true,
+    "dedupeAdjacent": true
+  },
+  "summarize": {
+    "head": 30,
+    "tail": 10
+  },
+  "counters": [
+    {
+      "name": "pages",
+      "pattern": "Page \\d+"
+    },
+    {
+      "name": "errors",
+      "pattern": "error|failed",
+      "flags": "i"
+    }
+  ]
+}

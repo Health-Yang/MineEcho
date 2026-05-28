@@ -1,0 +1,33 @@
+{
+  "id": "document/pptx",
+  "family": "document-pptx",
+  "description": "PowerPoint presentation extraction output formatter",
+  "match": {
+    "toolNames": ["pptx_extractor", "ppt_extractor", "extract_pptx", "extract_slides"]
+  },
+  "filters": {
+    "skipPatterns": [
+      "^\\s*$"
+    ],
+    "keepPatterns": []
+  },
+  "transforms": {
+    "stripAnsi": true,
+    "trimEmptyEdges": true,
+    "dedupeAdjacent": false
+  },
+  "summarize": {
+    "head": 30,
+    "tail": 20
+  },
+  "counters": [
+    {
+      "name": "slides",
+      "pattern": "^#*\\s+Slide \\d+"
+    },
+    {
+      "name": "bullets",
+      "pattern": "^\\s*[-*]"
+    }
+  ]
+}

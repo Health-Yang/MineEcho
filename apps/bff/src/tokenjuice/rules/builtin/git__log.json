@@ -1,0 +1,24 @@
+{
+  "id": "git/log",
+  "family": "git-log",
+  "description": "Git log output formatter",
+  "match": {
+    "argv0": ["git"],
+    "argvIncludesAny": [["log"]]
+  },
+  "filters": {
+    "skipPatterns": [
+      "^commit [a-f0-9]+$"
+    ],
+    "keepPatterns": []
+  },
+  "transforms": {
+    "stripAnsi": true,
+    "trimEmptyEdges": true,
+    "dedupeAdjacent": true
+  },
+  "summarize": {
+    "head": 10,
+    "tail": 0
+  }
+}

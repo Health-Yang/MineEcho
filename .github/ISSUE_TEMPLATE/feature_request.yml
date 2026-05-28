@@ -1,0 +1,62 @@
+name: Feature request
+description: Suggest an improvement to MineEcho.
+title: "[Feature]: "
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Keep requests focused. Do not include private documents, memory exports, AI app credentials, tokens, or internal company endpoints.
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: What user problem should this solve?
+      placeholder: When importing AI apps, users cannot see whether the app failed at routing, connection, or model response...
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed solution
+      description: Describe the smallest useful behavior change.
+    validations:
+      required: true
+  - type: dropdown
+    id: area
+    attributes:
+      label: Area
+      options:
+        - Chat
+        - Skill center
+        - AI apps
+        - Memory
+        - Knowledge base
+        - Knowledge graph
+        - TokenJuice / cost controls
+        - Gateway compatibility
+        - Docker / deployment
+        - Documentation
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Optional, but useful for tradeoffs.
+  - type: textarea
+    id: validation
+    attributes:
+      label: How would we verify it?
+      placeholder: Add focused tests for..., manually verify by...
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Pre-submit checks
+      options:
+        - label: This request does not include secrets, private documents, local runtime data, or personal/company data.
+          required: true
+        - label: I checked the roadmap/docs and existing issues first.
+          required: true

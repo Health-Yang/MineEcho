@@ -1,0 +1,87 @@
+# 单容器部署：OpenClaw Gateway + MineEcho BFF + Console
+# 改进点：
+# 1. 使用 @mineecho/core 进行统一配置管理
+# 2. 支持配置文件热重载
+# 3. 健康检查端点
+# 4. 结构化日志输出
+
+ARG NODE_IMAGE=m.daocloud.io/docker.io/library/node:22-alpine
+
+# ==========================================
+# 构建阶段
+# ==========================================
+FROM ${NODE_IMAGE} AS builder
+
+WORKDIR /app
+
+# 复制 package.json
+COPY package.json package-lock.json* ./
+COPY bff/package.json ./bff/
+COPY console/package.json ./console/
+
+# 安装依赖
+RUN npm ci
+
+# 复制源码
+COPY bff ./bff
+COPY console ./console
+
+# 构建
+RUN npm run build
+
+# ==========================================
+# 运行阶段
+# ==========================================
+FROM ${NODE_IMAGE}
+
+# 安装系统依赖
+RUN apk add --no-cache \
+    git \
+    python3 \
+    py3-pip \
+    curl \
+    && pip3 install --break-system-packages python-docx openpyxl \
+    || pip3 install python-docx openpyxl
+
+WORKDIR /app
+
+# 安装 Gateway
+RUN mkdir -p /app/gateway && \
+    echo '{"name":"gateway","dependencies":{"openclaw":"latest"}}' > /app/gateway/package.json && \
+    cd /app/gateway && \
+    npm install --omit=dev
+
+# 复制 BFF 依赖和构建产物
+COPY bff/package.json ./
+RUN npm install --omit=dev
+COPY --from=builder /app/bff/dist ./dist
+COPY --from=builder /app/console/dist ./console-dist
+
+# 复制启动脚本
+COPY docker/mineecho-with-gateway/entrypoint.sh /app/entrypoint.sh
+COPY docker/mineecho-with-gateway/wait-for-port.js /app/wait-for-port.js
+COPY docker/mineecho-with-gateway/inject-minimax-key.cjs /app/inject-minimax-key.cjs
+RUN chmod +x /app/entrypoint.sh
+
+# 复制内置技能
+COPY docker/mineecho-with-gateway/skills /app/builtin-skills/
+
+# 复制健康检查脚本
+COPY docker/healthcheck.sh /app/healthcheck.sh
+RUN chmod +x /app/healthcheck.sh
+
+# 环境变量
+ENV NODE_ENV=production
+ENV BFF_PORT=3085
+ENV CONSOLE_DIST=/app/console-dist
+ENV OPENCLAW_GATEWAY_URL=ws://127.0.0.1:18789
+ENV OPENCLAW_HOME=/app/.openclaw
+ENV OPENCLAW_GATEWAY_PORT=18789
+
+# 健康检查
+HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
+    CMD /app/healthcheck.sh
+
+EXPOSE 3085
+
+ENTRYPOINT ["/app/entrypoint.sh"]

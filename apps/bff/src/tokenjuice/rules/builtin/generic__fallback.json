@@ -1,0 +1,20 @@
+{
+  "id": "generic/fallback",
+  "family": "generic",
+  "description": "Default fallback rule for unknown tools",
+  "match": {
+    "toolNames": ["*"]
+  },
+  "filters": {
+    "skipPatterns": [],
+    "keepPatterns": []
+  },
+  "transforms": {
+    "stripAnsi": true,
+    "trimEmptyEdges": true
+  },
+  "summarize": {
+    "head": 6,
+    "tail": 6
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "id": "cargo/build",
+  "family": "cargo-build",
+  "description": "Cargo build output formatter",
+  "match": {
+    "argv0": ["cargo"],
+    "argvIncludesAny": [["build", "check", "clippy"]]
+  },
+  "filters": {
+    "skipPatterns": [
+      "^\\s*$",
+      "^Compiling.*$",
+      "^Building.*$",
+      "^   Compiling.*$",
+      "^    Finished.*$"
+    ],
+    "keepPatterns": [
+      "^error\\[",
+      "^warning\\[",
+      "^error:",
+      "^warning:",
+      "^\\s+\\|.*$"
+    ]
+  },
+  "transforms": {
+    "stripAnsi": true,
+    "trimEmptyEdges": true
+  },
+  "summarize": {
+    "head": 50,
+    "tail": 20
+  },
+  "counters": [
+    {
+      "name": "error",
+      "pattern": "^error\\["
+    },
+    {
+      "name": "warning",
+      "pattern": "^warning\\["
+    }
+  ]
+}

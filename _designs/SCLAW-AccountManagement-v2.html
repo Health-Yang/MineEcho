@@ -1,0 +1,1604 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MINECHO - 账号管理</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    :root {
+      --primary: #0066ff;
+      --primary-light: #e6f0ff;
+      --accent: #f5a623;
+      --success: #52c41a;
+      --warning: #faad14;
+      --danger: #ff4d4f;
+      --bg: #f5f7fa;
+      --card-shadow: 0 2px 8px rgba(0,0,0,0.08);
+      --border: #e8ecf1;
+      --text-primary: #1a1d21;
+      --text-secondary: #6b7280;
+      --text-muted: #9ca3af;
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg);
+      color: var(--text-primary);
+      min-height: 100vh;
+    }
+
+    /* Header */
+    .header {
+      background: #fff;
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header-left {
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .logo {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--primary);
+      letter-spacing: -0.5px;
+    }
+
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 14px;
+      color: var(--text-secondary);
+    }
+
+    .breadcrumb a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .breadcrumb a:hover {
+      color: var(--primary);
+    }
+
+    .breadcrumb-sep {
+      color: var(--text-muted);
+    }
+
+    .breadcrumb-current {
+      color: var(--text-primary);
+      font-weight: 500;
+    }
+
+    .header-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .header-btn {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      border: none;
+      background: var(--bg);
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+    }
+
+    .header-btn:hover {
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+
+    /* Main Layout */
+    .main-container {
+      display: flex;
+      max-width: 1440px;
+      margin: 0 auto;
+      padding: 24px;
+      gap: 24px;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 280px;
+      flex-shrink: 0;
+    }
+
+    .user-card {
+      background: #fff;
+      border-radius: 16px;
+      padding: 24px;
+      box-shadow: var(--card-shadow);
+      text-align: center;
+    }
+
+    .user-avatar {
+      width: 80px;
+      height: 80px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--primary), #4d9fff);
+      margin: 0 auto 16px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 28px;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .user-name {
+      font-size: 18px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .user-email {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 12px;
+    }
+
+    .user-role {
+      display: inline-block;
+      padding: 4px 12px;
+      background: var(--primary-light);
+      color: var(--primary);
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .user-role.admin {
+      background: #fef3e6;
+      color: #d48806;
+    }
+
+    .quick-actions {
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+    }
+
+    .quick-action-btn {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      background: #fff;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text-primary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+      transition: all 0.2s;
+    }
+
+    .quick-action-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: var(--primary-light);
+    }
+
+    .quick-action-btn svg {
+      width: 18px;
+      height: 18px;
+      color: currentColor;
+    }
+
+    /* Account Switcher */
+    .account-switcher {
+      margin-top: 24px;
+      padding-top: 24px;
+      border-top: 1px solid var(--border);
+    }
+
+    .account-switcher-title {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin-bottom: 12px;
+    }
+
+    .account-item {
+      display: flex;
+      align-items: center;
+      padding: 10px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      margin-bottom: 6px;
+      transition: all 0.2s;
+    }
+
+    .account-item:hover {
+      background: var(--bg);
+    }
+
+    .account-item.active {
+      background: var(--primary-light);
+    }
+
+    .account-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: var(--bg);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-right: 10px;
+      font-size: 14px;
+    }
+
+    .account-info {
+      flex: 1;
+    }
+
+    .account-name {
+      font-size: 13px;
+      font-weight: 500;
+    }
+
+    .account-status {
+      font-size: 11px;
+      color: var(--success);
+    }
+
+    .account-status.inactive {
+      color: var(--text-muted);
+    }
+
+    .add-account-btn {
+      width: 100%;
+      padding: 10px;
+      border: 2px dashed var(--border);
+      border-radius: 10px;
+      background: transparent;
+      font-size: 13px;
+      color: var(--text-secondary);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.2s;
+    }
+
+    .add-account-btn:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    /* Content */
+    .content {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 600;
+      margin-bottom: 16px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-title svg {
+      width: 20px;
+      height: 20px;
+      color: var(--primary);
+    }
+
+    /* Stats Grid */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .stat-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 20px;
+      box-shadow: var(--card-shadow);
+    }
+
+    .stat-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 12px;
+    }
+
+    .stat-card-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .stat-card-icon.blue { background: var(--primary-light); color: var(--primary); }
+    .stat-card-icon.orange { background: #fef3e6; color: var(--accent); }
+    .stat-card-icon.green { background: #e8f5e8; color: var(--success); }
+    .stat-card-icon.purple { background: #f3e8fe; color: #8b5cf6; }
+
+    .stat-card-icon svg {
+      width: 20px;
+      height: 20px;
+    }
+
+    .stat-trend {
+      font-size: 12px;
+      font-weight: 500;
+      padding: 4px 8px;
+      border-radius: 6px;
+    }
+
+    .stat-trend.up {
+      background: #e8f5e8;
+      color: var(--success);
+    }
+
+    .stat-trend.down {
+      background: #fce8e8;
+      color: var(--danger);
+    }
+
+    .stat-value {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 4px;
+    }
+
+    .stat-label {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    /* Quota Section */
+    .quota-section {
+      background: #fff;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: var(--card-shadow);
+      margin-bottom: 32px;
+    }
+
+    .quota-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+    }
+
+    .quota-item {
+      position: relative;
+    }
+
+    .quota-header {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 10px;
+    }
+
+    .quota-label {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    .quota-value {
+      font-size: 13px;
+      color: var(--text-secondary);
+    }
+
+    .quota-bar {
+      height: 8px;
+      background: var(--bg);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+
+    .quota-fill {
+      height: 100%;
+      border-radius: 4px;
+      transition: width 0.5s ease;
+    }
+
+    .quota-fill.normal { background: var(--primary); }
+    .quota-fill.warning { background: var(--warning); }
+    .quota-fill.danger { background: var(--danger); }
+
+    /* Section Card */
+    .section-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 24px;
+      box-shadow: var(--card-shadow);
+      margin-bottom: 24px;
+    }
+
+    .section-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+
+    .section-header h3 {
+      font-size: 15px;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .section-header h3 svg {
+      width: 18px;
+      height: 18px;
+      color: var(--primary);
+    }
+
+    /* Buttons */
+    .btn {
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s;
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--primary);
+      color: #fff;
+    }
+
+    .btn-primary:hover {
+      background: #0055dd;
+    }
+
+    .btn-outline {
+      background: #fff;
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+    }
+
+    .btn-outline:hover {
+      border-color: var(--primary);
+      color: var(--primary);
+    }
+
+    .btn-danger {
+      background: #fce8e8;
+      color: var(--danger);
+    }
+
+    .btn-danger:hover {
+      background: var(--danger);
+      color: #fff;
+    }
+
+    .btn svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    /* Table */
+    .table-wrapper {
+      overflow-x: auto;
+    }
+
+    .data-table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    .data-table th {
+      text-align: left;
+      padding: 12px 16px;
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .data-table td {
+      padding: 14px 16px;
+      font-size: 14px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .data-table tr:last-child td {
+      border-bottom: none;
+    }
+
+    .data-table tr:hover {
+      background: var(--bg);
+    }
+
+    .code-cell {
+      font-family: 'Monaco', 'Consolas', monospace;
+      font-size: 13px;
+      color: var(--primary);
+      background: var(--primary-light);
+      padding: 4px 8px;
+      border-radius: 4px;
+    }
+
+    .status-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .status-badge.available {
+      background: #e8f5e8;
+      color: var(--success);
+    }
+
+    .status-badge.used {
+      background: var(--bg);
+      color: var(--text-secondary);
+    }
+
+    .status-badge.expired {
+      background: #fce8e8;
+      color: var(--danger);
+    }
+
+    .table-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    .table-btn {
+      padding: 6px 10px;
+      border-radius: 6px;
+      border: none;
+      background: var(--bg);
+      color: var(--text-secondary);
+      font-size: 12px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 4px;
+      transition: all 0.2s;
+    }
+
+    .table-btn:hover {
+      background: var(--primary-light);
+      color: var(--primary);
+    }
+
+    .table-btn svg {
+      width: 14px;
+      height: 14px;
+    }
+
+    /* Account Cards */
+    .account-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+    }
+
+    .account-card {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transition: all 0.2s;
+    }
+
+    .account-card:hover {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-light);
+    }
+
+    .account-card-avatar {
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .account-card:nth-child(1) .account-card-avatar { background: linear-gradient(135deg, #0066ff, #4d9fff); }
+    .account-card:nth-child(2) .account-card-avatar { background: linear-gradient(135deg, #8b5cf6, #a78bfa); }
+    .account-card:nth-child(3) .account-card-avatar { background: linear-gradient(135deg, #f5a623, #fbbf24); }
+
+    .account-card-info {
+      flex: 1;
+    }
+
+    .account-card-name {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 4px;
+    }
+
+    .account-card-meta {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    .account-card-status {
+      padding: 4px 10px;
+      border-radius: 12px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+
+    .account-card-status.active {
+      background: #e8f5e8;
+      color: var(--success);
+    }
+
+    .account-card-status.inactive {
+      background: var(--bg);
+      color: var(--text-muted);
+    }
+
+    .account-card-actions {
+      display: flex;
+      gap: 8px;
+    }
+
+    /* Timeline */
+    .timeline {
+      position: relative;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      left: 11px;
+      top: 24px;
+      bottom: 24px;
+      width: 2px;
+      background: var(--border);
+    }
+
+    .timeline-item {
+      display: flex;
+      gap: 16px;
+      padding-bottom: 20px;
+      position: relative;
+    }
+
+    .timeline-item:last-child {
+      padding-bottom: 0;
+    }
+
+    .timeline-dot {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--primary-light);
+      border: 2px solid var(--primary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      z-index: 1;
+    }
+
+    .timeline-dot svg {
+      width: 12px;
+      height: 12px;
+      color: var(--primary);
+    }
+
+    .timeline-dot.success {
+      background: #e8f5e8;
+      border-color: var(--success);
+    }
+
+    .timeline-dot.success svg {
+      color: var(--success);
+    }
+
+    .timeline-dot.warning {
+      background: #fef3e6;
+      border-color: var(--warning);
+    }
+
+    .timeline-dot.warning svg {
+      color: var(--warning);
+    }
+
+    .timeline-content {
+      flex: 1;
+    }
+
+    .timeline-title {
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    .timeline-desc {
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-bottom: 4px;
+    }
+
+    .timeline-time {
+      font-size: 12px;
+      color: var(--text-muted);
+    }
+
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0,0,0,0.5);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 1000;
+    }
+
+    .modal-overlay.active {
+      display: flex;
+    }
+
+    .modal {
+      background: #fff;
+      border-radius: 16px;
+      width: 480px;
+      max-width: 90vw;
+      max-height: 90vh;
+      overflow: auto;
+    }
+
+    .modal-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .modal-header h3 {
+      font-size: 18px;
+      font-weight: 600;
+    }
+
+    .modal-close {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      border: none;
+      background: var(--bg);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-secondary);
+    }
+
+    .modal-close:hover {
+      background: var(--danger);
+      color: #fff;
+    }
+
+    .modal-body {
+      padding: 24px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+    }
+
+    .form-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      margin-bottom: 8px;
+    }
+
+    .form-input {
+      width: 100%;
+      padding: 10px 14px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 14px;
+      font-family: inherit;
+      transition: all 0.2s;
+    }
+
+    .form-input:focus {
+      outline: none;
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px var(--primary-light);
+    }
+
+    .form-select {
+      appearance: none;
+      background: #fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M3 4.5L6 7.5L9 4.5'/%3E%3C/svg%3E") no-repeat right 12px center;
+    }
+
+    .modal-footer {
+      padding: 16px 24px;
+      border-top: 1px solid var(--border);
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: #fff;
+      border-radius: 12px;
+      padding: 16px 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      transform: translateY(100px);
+      opacity: 0;
+      transition: all 0.3s ease;
+      z-index: 2000;
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .toast-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .toast-icon.success {
+      background: #e8f5e8;
+      color: var(--success);
+    }
+
+    .toast-icon.error {
+      background: #fce8e8;
+      color: var(--danger);
+    }
+
+    .toast-message {
+      font-size: 14px;
+      font-weight: 500;
+    }
+
+    /* Responsive */
+    @media (max-width: 1200px) {
+      .stats-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .quota-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      .account-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .main-container {
+        flex-direction: column;
+      }
+      .sidebar {
+        width: 100%;
+      }
+      .stats-grid {
+        grid-template-columns: 1fr;
+      }
+      .quota-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-left">
+      <div class="logo">MINECHO</div>
+      <nav class="breadcrumb">
+        <a href="#">首页</a>
+        <span class="breadcrumb-sep">/</span>
+        <a href="#">设置</a>
+        <span class="breadcrumb-sep">/</span>
+        <span class="breadcrumb-current">账号管理</span>
+      </nav>
+    </div>
+    <div class="header-right">
+      <button class="header-btn" title="通知">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+          <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+        </svg>
+      </button>
+      <button class="header-btn" title="帮助">
+        <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <circle cx="12" cy="12" r="10"></circle>
+          <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"></path>
+          <line x1="12" y1="17" x2="12.01" y2="17"></line>
+        </svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Main Container -->
+  <div class="main-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="user-card">
+        <div class="user-avatar">李</div>
+        <div class="user-name">李明</div>
+        <div class="user-email">liming@example.com</div>
+        <span class="user-role admin">管理员</span>
+      </div>
+
+      <div class="quick-actions">
+        <button class="quick-action-btn">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+            <circle cx="12" cy="7" r="4"></circle>
+          </svg>
+          编辑资料
+        </button>
+        <button class="quick-action-btn">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+          修改密码
+        </button>
+        <button class="quick-action-btn">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <circle cx="12" cy="12" r="3"></circle>
+            <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"></path>
+          </svg>
+          设置
+        </button>
+      </div>
+
+      <div class="account-switcher">
+        <div class="account-switcher-title">切换账号</div>
+        <div class="account-item active">
+          <div class="account-icon">💼</div>
+          <div class="account-info">
+            <div class="account-name">明德科技</div>
+            <div class="account-status">当前账号</div>
+          </div>
+        </div>
+        <div class="account-item">
+          <div class="account-icon">🏢</div>
+          <div class="account-info">
+            <div class="account-name">星辰教育</div>
+            <div class="account-status inactive">未激活</div>
+          </div>
+        </div>
+        <button class="add-account-btn" onclick="showModal('addAccount')">
+          <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <line x1="12" y1="5" x2="12" y2="19"></line>
+            <line x1="5" y1="12" x2="19" y2="12"></line>
+          </svg>
+          添加账号
+        </button>
+      </div>
+    </aside>
+
+    <!-- Content -->
+    <main class="content">
+      <!-- Stats Grid -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <div class="stat-card-icon blue">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+              </svg>
+            </div>
+            <span class="stat-trend up">+12%</span>
+          </div>
+          <div class="stat-value">1,248</div>
+          <div class="stat-label">对话次数（本月）</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <div class="stat-card-icon orange">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+              </svg>
+            </div>
+            <span class="stat-trend up">+8%</span>
+          </div>
+          <div class="stat-value">2.5M</div>
+          <div class="stat-label">Token 用量</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <div class="stat-card-icon green">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M22 12h-4l-3 9L9 3l-3 9H2"></path>
+              </svg>
+            </div>
+            <span class="stat-trend down">-3%</span>
+          </div>
+          <div class="stat-value">18.2 GB</div>
+          <div class="stat-label">存储空间</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-card-header">
+            <div class="stat-card-icon purple">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+              </svg>
+            </div>
+            <span class="stat-trend up">+15%</span>
+          </div>
+          <div class="stat-value">86h</div>
+          <div class="stat-label">使用时长</div>
+        </div>
+      </div>
+
+      <!-- Quota Section -->
+      <div class="quota-section">
+        <h2 class="section-title">
+          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path d="M21 12a9 9 0 0 1-9 9m9-9a9 9 0 0 0-9-9m9 9H3m9 9a9 9 0 0 1-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 0 1 9-9"></path>
+          </svg>
+          配额管理
+        </h2>
+        <div class="quota-grid">
+          <div class="quota-item">
+            <div class="quota-header">
+              <span class="quota-label">对话额度</span>
+              <span class="quota-value">1,248 / 2,000</span>
+            </div>
+            <div class="quota-bar">
+              <div class="quota-fill normal" style="width: 62.4%"></div>
+            </div>
+          </div>
+          <div class="quota-item">
+            <div class="quota-header">
+              <span class="quota-label">Token 用量</span>
+              <span class="quota-value">2.5M / 5M</span>
+            </div>
+            <div class="quota-bar">
+              <div class="quota-fill warning" style="width: 50%"></div>
+            </div>
+          </div>
+          <div class="quota-item">
+            <div class="quota-header">
+              <span class="quota-label">存储空间</span>
+              <span class="quota-value">18.2 GB / 50 GB</span>
+            </div>
+            <div class="quota-bar">
+              <div class="quota-fill danger" style="width: 36.4%"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Invitation Code Section (Admin Only) -->
+      <div class="section-card">
+        <div class="section-header">
+          <h3>
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="8.5" cy="7" r="4"></circle>
+              <line x1="20" y1="8" x2="20" y2="14"></line>
+              <line x1="23" y1="11" x2="17" y2="11"></line>
+            </svg>
+            邀请码管理
+          </h3>
+          <button class="btn btn-primary" onclick="generateInvitation()">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            生成邀请码
+          </button>
+        </div>
+        <div class="table-wrapper">
+          <table class="data-table">
+            <thead>
+              <tr>
+                <th>邀请码</th>
+                <th>创建时间</th>
+                <th>有效期至</th>
+                <th>状态</th>
+                <th>操作</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="code-cell">SCW-2024-XK8M3</span></td>
+                <td>2024-05-10 14:32</td>
+                <td>2024-06-10 14:32</td>
+                <td><span class="status-badge available">可用</span></td>
+                <td>
+                  <div class="table-actions">
+                    <button class="table-btn" onclick="copyCode('SCW-2024-XK8M3')">
+                      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                      </svg>
+                      复制
+                    </button>
+                    <button class="table-btn" onclick="revokeInvitation('SCW-2024-XK8M3')">
+                      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="15" y1="9" x2="9" y2="15"></line>
+                        <line x1="9" y1="9" x2="15" y2="15"></line>
+                      </svg>
+                      撤销
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><span class="code-cell">SCW-2024-VL9N2</span></td>
+                <td>2024-05-08 09:15</td>
+                <td>2024-06-08 09:15</td>
+                <td><span class="status-badge used">已使用</span></td>
+                <td>
+                  <div class="table-actions">
+                    <button class="table-btn" onclick="copyCode('SCW-2024-VL9N2')">
+                      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+                        <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+                      </svg>
+                      复制
+                    </button>
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td><span class="code-cell">SCW-2024-RT5Y1</span></td>
+                <td>2024-04-25 16:45</td>
+                <td>2024-05-25 16:45</td>
+                <td><span class="status-badge expired">已过期</span></td>
+                <td>
+                  <div class="table-actions">
+                    <button class="table-btn" onclick="deleteInvitation('SCW-2024-RT5Y1')">
+                      <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <polyline points="3 6 5 6 21 6"></polyline>
+                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                      </svg>
+                      删除
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Multi-Account Section -->
+      <div class="section-card">
+        <div class="section-header">
+          <h3>
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+              <circle cx="9" cy="7" r="4"></circle>
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+              <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+            </svg>
+            多账号管理
+          </h3>
+          <button class="btn btn-outline" onclick="showModal('addAccount')">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <line x1="12" y1="5" x2="12" y2="19"></line>
+              <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            添加账号
+          </button>
+        </div>
+        <div class="account-grid">
+          <div class="account-card">
+            <div class="account-card-avatar">💼</div>
+            <div class="account-card-info">
+              <div class="account-card-name">明德科技</div>
+              <div class="account-card-meta">创建于 2024-01-15 · 5 个成员</div>
+            </div>
+            <span class="account-card-status active">活跃</span>
+            <div class="account-card-actions">
+              <button class="table-btn" title="编辑" onclick="editAccount('明德科技')">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                </svg>
+              </button>
+              <button class="table-btn" title="切换" onclick="switchAccount('明德科技')">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <polyline points="17 1 21 5 17 9"></polyline>
+                  <path d="M3 11V9a4 4 0 0 1 4-4h14"></path>
+                  <polyline points="7 23 3 19 7 15"></polyline>
+                  <path d="M21 13v2a4 4 0 0 1-4 4H3"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+          <div class="account-card">
+            <div class="account-card-avatar">🏢</div>
+            <div class="account-card-info">
+              <div class="account-card-name">星辰教育</div>
+              <div class="account-card-meta">创建于 2024-03-22 · 2 个成员</div>
+            </div>
+            <span class="account-card-status inactive">未激活</span>
+            <div class="account-card-actions">
+              <button class="table-btn" title="编辑" onclick="editAccount('星辰教育')">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                  <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                </svg>
+              </button>
+              <button class="table-btn" title="删除" onclick="deleteAccount('星辰教育')">
+                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                  <polyline points="3 6 5 6 21 6"></polyline>
+                  <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                </svg>
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Activity Timeline -->
+      <div class="section-card">
+        <div class="section-header">
+          <h3>
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+            </svg>
+            活动记录
+          </h3>
+        </div>
+        <div class="timeline">
+          <div class="timeline-item">
+            <div class="timeline-dot success">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <polyline points="20 6 9 17 4 12"></polyline>
+              </svg>
+            </div>
+            <div class="timeline-content">
+              <div class="timeline-title">登录成功</div>
+              <div class="timeline-desc">从 Chrome 浏览器登录，IP: 192.168.1.100</div>
+              <div class="timeline-time">10 分钟前</div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot warning">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                <line x1="12" y1="9" x2="12" y2="13"></line>
+                <line x1="12" y1="17" x2="12.01" y2="17"></line>
+              </svg>
+            </div>
+            <div class="timeline-content">
+              <div class="timeline-title">Token 用量达到 50%</div>
+              <div class="timeline-desc">本月已使用 2.5M / 5M Token</div>
+              <div class="timeline-time">2 小时前</div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="12" y1="8" x2="12" y2="12"></line>
+                <line x1="12" y1="16" x2="12.01" y2="16"></line>
+              </svg>
+            </div>
+            <div class="timeline-content">
+              <div class="timeline-title">邀请码生成</div>
+              <div class="timeline-desc">生成了邀请码 SCW-2024-XK8M3</div>
+              <div class="timeline-time">昨天 14:32</div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                <circle cx="8.5" cy="7" r="4"></circle>
+                <line x1="20" y1="8" x2="20" y2="14"></line>
+                <line x1="23" y1="11" x2="17" y2="11"></line>
+              </svg>
+            </div>
+            <div class="timeline-content">
+              <div class="timeline-title">新成员加入</div>
+              <div class="timeline-desc">王芳加入了明德科技团队</div>
+              <div class="timeline-time">昨天 10:15</div>
+            </div>
+          </div>
+          <div class="timeline-item">
+            <div class="timeline-dot">
+              <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+            </div>
+            <div class="timeline-content">
+              <div class="timeline-title">密码修改</div>
+              <div class="timeline-desc">账号密码已成功修改</div>
+              <div class="timeline-time">3 天前</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <!-- Add Account Modal -->
+  <div class="modal-overlay" id="addAccountModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3>添加账号</h3>
+        <button class="modal-close" onclick="closeModal('addAccount')">✕</button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">账号名称</label>
+          <input type="text" class="form-input" placeholder="请输入账号名称">
+        </div>
+        <div class="form-group">
+          <label class="form-label">账号类型</label>
+          <select class="form-input form-select">
+            <option value="personal">个人账号</option>
+            <option value="team">团队账号</option>
+            <option value="enterprise">企业账号</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">负责人邮箱</label>
+          <input type="email" class="form-input" placeholder="请输入负责人邮箱">
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="closeModal('addAccount')">取消</button>
+        <button class="btn btn-primary" onclick="confirmAddAccount()">确认添加</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div class="toast" id="toast">
+    <div class="toast-icon success">
+      <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <polyline points="20 6 9 17 4 12"></polyline>
+      </svg>
+    </div>
+    <div class="toast-message" id="toastMessage">操作成功</div>
+  </div>
+
+  <script>
+    // API Base URL
+    const API_BASE = '/api';
+
+    // API Calls
+    async function fetchUsageStats() {
+      try {
+        const response = await fetch(`${API_BASE}/usage/stats`);
+        if (!response.ok) throw new Error('Failed to fetch usage stats');
+        return await response.json();
+      } catch (error) {
+        console.error('Error fetching usage stats:', error);
+        // Return mock data for demo
+        return {
+          conversations: { current: 1248, trend: 12 },
+          tokens: { current: 2500000, trend: 8, unit: 'M' },
+          storage: { current: 18.2, trend: -3, unit: 'GB' },
+          duration: { current: 86, trend: 15, unit: 'h' }
+        };
+      }
+    }
+
+    async function fetchQuota() {
+      try {
+        const response = await fetch(`${API_BASE}/usage/quota`);
+        if (!response.ok) throw new Error('Failed to fetch quota');
+        return await response.json();
+      } catch (error) {
+        console.error('Error fetching quota:', error);
+        return {
+          conversations: { used: 1248, total: 2000 },
+          tokens: { used: 2500000, total: 5000000, unit: 'M' },
+          storage: { used: 18.2, total: 50, unit: 'GB' }
+        };
+      }
+    }
+
+    async function fetchAccounts() {
+      try {
+        const response = await fetch(`${API_BASE}/accounts`);
+        if (!response.ok) throw new Error('Failed to fetch accounts');
+        return await response.json();
+      } catch (error) {
+        console.error('Error fetching accounts:', error);
+        return [
+          { id: 1, name: '明德科技', status: 'active', createdAt: '2024-01-15', members: 5 },
+          { id: 2, name: '星辰教育', status: 'inactive', createdAt: '2024-03-22', members: 2 }
+        ];
+      }
+    }
+
+    async function fetchInvitations() {
+      try {
+        const response = await fetch(`${API_BASE}/invitations`);
+        if (!response.ok) throw new Error('Failed to fetch invitations');
+        return await response.json();
+      } catch (error) {
+        console.error('Error fetching invitations:', error);
+        return [
+          { code: 'SCW-2024-XK8M3', createdAt: '2024-05-10 14:32', expireAt: '2024-06-10 14:32', status: 'available' },
+          { code: 'SCW-2024-VL9N2', createdAt: '2024-05-08 09:15', expireAt: '2024-06-08 09:15', status: 'used' },
+          { code: 'SCW-2024-RT5Y1', createdAt: '2024-04-25 16:45', expireAt: '2024-05-25 16:45', status: 'expired' }
+        ];
+      }
+    }
+
+    async function generateInvitation() {
+      try {
+        const response = await fetch(`${API_BASE}/invitations`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ validDays: 30 })
+        });
+        if (!response.ok) throw new Error('Failed to generate invitation');
+        const data = await response.json();
+        showToast('邀请码已生成: ' + data.code);
+        // Refresh the invitation list
+        await loadInvitations();
+      } catch (error) {
+        console.error('Error generating invitation:', error);
+        // Mock: show success for demo
+        const mockCode = 'SCW-2024-' + Math.random().toString(36).substring(2, 7).toUpperCase();
+        showToast('邀请码已生成: ' + mockCode);
+      }
+    }
+
+    async function revokeInvitation(code) {
+      try {
+        const response = await fetch(`${API_BASE}/invitations/${code}/revoke`, {
+          method: 'POST'
+        });
+        if (!response.ok) throw new Error('Failed to revoke invitation');
+        showToast('邀请码已撤销');
+        // Refresh the invitation list
+        await loadInvitations();
+      } catch (error) {
+        console.error('Error revoking invitation:', error);
+        showToast('邀请码已撤销', 'success');
+      }
+    }
+
+    // Helper Functions
+    function showModal(modalId) {
+      document.getElementById(modalId + 'Modal').classList.add('active');
+    }
+
+    function closeModal(modalId) {
+      document.getElementById(modalId + 'Modal').classList.remove('active');
+    }
+
+    function showToast(message, type = 'success') {
+      const toast = document.getElementById('toast');
+      const toastMessage = document.getElementById('toastMessage');
+      toastMessage.textContent = message;
+      toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 3000);
+    }
+
+    function copyCode(code) {
+      navigator.clipboard.writeText(code).then(() => {
+        showToast('已复制到剪贴板');
+      }).catch(err => {
+        console.error('Failed to copy:', err);
+        showToast('复制失败', 'error');
+      });
+    }
+
+    function confirmAddAccount() {
+      showToast('账号添加成功');
+      closeModal('addAccount');
+    }
+
+    function editAccount(name) {
+      showToast('编辑账号: ' + name);
+    }
+
+    function switchAccount(name) {
+      showToast('已切换到: ' + name);
+    }
+
+    function deleteAccount(name) {
+      if (confirm('确定要删除账号 ' + name + ' 吗？')) {
+        showToast('账号已删除');
+      }
+    }
+
+    function deleteInvitation(code) {
+      if (confirm('确定要删除邀请码 ' + code + ' 吗？')) {
+        showToast('邀请码已删除');
+      }
+    }
+
+    // Initialize
+    async function init() {
+      try {
+        // Load initial data
+        const [stats, quota, accounts, invitations] = await Promise.all([
+          fetchUsageStats(),
+          fetchQuota(),
+          fetchAccounts(),
+          fetchInvitations()
+        ]);
+        console.log('Data loaded:', { stats, quota, accounts, invitations });
+      } catch (error) {
+        console.error('Failed to initialize:', error);
+      }
+    }
+
+    // Start initialization
+    init();
+  </script>
+</body>
+</html>
