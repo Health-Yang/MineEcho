@@ -1,7 +1,7 @@
 /**
- * TokenJuice - TokenJuice Text Compression for MineEcho BFF
+ * TokenLess - Context Compression for MineEcho BFF
  *
- * Ported from the Rust TokenJuice implementation.
+ * Internal module paths keep the legacy tokenjuice name for compatibility.
  * MIT License - Copyright (c) 2026 Vincent Koc
  *
  * Intelligent tool output compaction engine that reduces verbose
@@ -104,7 +104,7 @@ export function clearRulesCache(): void {
 }
 
 /**
- * Check if TokenJuice is initialized.
+ * Check if TokenLess is initialized.
  */
 export function isInitialized(): boolean {
   return cachedRules !== null;

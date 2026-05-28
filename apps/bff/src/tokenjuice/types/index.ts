@@ -1,7 +1,7 @@
 /**
- * TokenJuice - Intelligent Tool Output Compaction Engine
+ * TokenLess - Intelligent Tool Output Compaction Engine
  *
- * Ported from the Rust TokenJuice implementation.
+ * Internal module paths keep the legacy tokenjuice name for compatibility.
  * MIT License - Copyright (c) 2026 Vincent Koc
  *
  * TypeScript Implementation - Core Types

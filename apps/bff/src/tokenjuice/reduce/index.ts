@@ -1,5 +1,5 @@
 /**
- * TokenJuice - Reduction Pipeline
+ * TokenLess - Reduction Pipeline
  *
  * Core compression engine that reduces tool output to LLM-friendly summaries.
  * MIT License - Copyright (c) 2026 Vincent Koc

@@ -1,7 +1,7 @@
 /**
- * TokenJuice - Text Processing Utilities
+ * TokenLess - Text Processing Utilities
  *
- * Ported from the Rust TokenJuice text implementation.
+ * Internal module paths keep the legacy tokenjuice name for compatibility.
  * MIT License - Copyright (c) 2026 Vincent Koc
  */
 

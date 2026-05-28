@@ -1,5 +1,5 @@
 /**
- * TokenJuice - Rule Compiler
+ * TokenLess - Rule Compiler
  *
  * Compiles JSON rules into optimized RegExp patterns.
  * MIT License - Copyright (c) 2026 Vincent Koc

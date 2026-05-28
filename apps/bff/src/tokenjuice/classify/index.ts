@@ -1,5 +1,5 @@
 /**
- * TokenJuice - Rule Classification
+ * TokenLess - Rule Classification
  *
  * Classifies tool execution inputs to find the appropriate reduction rule.
  * MIT License - Copyright (c) 2026 Vincent Koc

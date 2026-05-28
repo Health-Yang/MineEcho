@@ -98,4 +98,4 @@ try {
   await rm(tempDir, { recursive: true, force: true });
 }
 
-console.log("TokenJuice metrics assertions passed");
+console.log("TokenLess metrics assertions passed");

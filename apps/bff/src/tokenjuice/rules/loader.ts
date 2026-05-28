@@ -1,5 +1,5 @@
 /**
- * TokenJuice - Rule Loader
+ * TokenLess - Rule Loader
  *
  * Loads rules from builtin, user, and project layers.
  * MIT License - Copyright (c) 2026 Vincent Koc

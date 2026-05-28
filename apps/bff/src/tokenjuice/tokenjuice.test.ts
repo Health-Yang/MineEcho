@@ -1,5 +1,5 @@
 /**
- * TokenJuice Tests
+ * TokenLess Tests
  */
 
 import { stripAnsi, tokenizeCommand, normalizeLines, trimEmptyEdges, dedupeAdjacent, pluralize, headTail, clampText, clampTextMiddle } from './text/index.js';
@@ -252,7 +252,7 @@ function test(name: string, fn: () => void) {
 }
 
 console.log('\n=== All Tests Complete ===');
-console.log('\nTokenJuice is working correctly!');
+console.log('\nTokenLess is working correctly!');
 console.log('\nTo use in your code:');
 console.log(`
 import { compactToolOutput, initializeTokenJuice } from './tokenjuice';
