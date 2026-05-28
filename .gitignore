@@ -36,9 +36,9 @@ __pycache__/
 *.db
 *.sqlite
 *.sqlite3
-db/
-dbs/
-data/
+/db/
+/dbs/
+/data/
 
 # Logs and diagnostics
 logs/
