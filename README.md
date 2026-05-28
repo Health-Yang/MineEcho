@@ -225,7 +225,7 @@ For a more detailed file-by-file map, see [`docs/runtime-data.md`](docs/runtime-
 
 - Environment variables: [`docs/environment.md`](docs/environment.md)
 - Architecture overview: [`docs/architecture.md`](docs/architecture.md)
-- Product positioning and highlights: [`docs/product-positioning.zh-CN.md`](docs/product-positioning.zh-CN.md)
+- Product positioning and highlights: [`docs/product-positioning.md`](docs/product-positioning.md)
 - Runtime data and local secrets: [`docs/runtime-data.md`](docs/runtime-data.md)
 - Commercial use: [`COMMERCIAL.md`](COMMERCIAL.md)
 - Contribution workflow: [`CONTRIBUTING.md`](CONTRIBUTING.md)

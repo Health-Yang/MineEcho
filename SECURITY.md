@@ -10,7 +10,11 @@ MineEcho is pre-1.0. Security fixes target the current `main` branch unless a re
 
 If you find a vulnerability, do not publish a public proof of concept before maintainers have had time to respond.
 
-Report privately with:
+Report privately by email:
+
+- Email: `yk565628110@163.com`
+
+Include:
 
 - A concise description of the issue.
 - Affected commit, branch, or release.
@@ -18,7 +22,7 @@ Report privately with:
 - Impact assessment: secret disclosure, local data exposure, remote code execution, prompt injection, privilege bypass, or denial of service.
 - Any relevant logs with tokens, personal data, company data, file paths, and session ids redacted.
 
-If this repository is mirrored or forked before a public security contact is configured, open a minimal public issue that says a private security report is needed, without exploit details or secrets.
+If email is unavailable, open a minimal public issue that says a private security report is needed, without exploit details or secrets.
 
 ## Sensitive Data
 
