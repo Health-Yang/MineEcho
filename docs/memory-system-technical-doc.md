@@ -1,13 +1,13 @@
-# MineEcho v3.5 记忆系统技术文档
+# MineEcho 记忆系统技术文档
 
-> 本文档描述 MineEcho v3.5 优化后的记忆系统架构、核心机制、与业界方案的对比，以及差异化优势。
-> 更新日期：2026-04-28
+> 本文档描述 MineEcho 0.1.0 公开版本中的记忆系统架构、核心机制、与业界方案的对比，以及差异化优势。
+> 更新日期：2026-05-28
 
 ---
 
 ## 一、执行摘要
 
-MineEcho v3.5 记忆系统采用**三层渐进式架构**：
+MineEcho 记忆系统采用**运行时记忆 + L0-L3 Memory Tree** 的组合架构：
 
 | 层级 | 作用域 | 持久化 | 容量 |
 |------|--------|--------|------|
@@ -15,11 +15,13 @@ MineEcho v3.5 记忆系统采用**三层渐进式架构**：
 | **Short-term Memory** | 当日 | **SQLite**（原 LRU，已迁移） | 300 条交互/天 |
 | **Long-term Memory** | 跨会话永久 | 文件 JSON | 用户画像 + 技能模式 + 洞察 |
 
-**本次优化引入的四大核心机制**：
+**当前版本的核心机制**：
 1. **冻结快照**（Frozen Snapshot）：Session 级 System Prompt 缓存，保护 Prefix Cache
 2. **重要性权重**（Importance Scoring）：交互按价值排序，突破单纯时间倒序的局限
 3. **背景审查 Agent**（Background Review）：每 10 轮后台提取高价值洞察写入长期记忆
-4. **SQLite 持久化**：短期记忆从纯内存迁移到 SQLite，重启不丢失
+4. **语义召回**：L0 使用关键词、中文语义别名、本地向量、重要性和时间衰减粗排，并在可用时接入 embedding 重排
+5. **Dream Scheduler**：后台把旧 L0 片段整理成 L1/L2/L3 摘要，并生成知识对齐候选
+6. **SQLite 持久化**：短期记忆从纯内存迁移到 SQLite，重启不丢失
 
 ---
 
@@ -346,17 +348,17 @@ OpenClaw 的核心哲学是**"多语言持久化"（Polyglot Persistence）**：
 
 ### 5.2 对比矩阵
 
-| 维度 | MineEcho v3.5 | OpenClaw |
+| 维度 | MineEcho 0.1.0 | OpenClaw |
 |------|-----------|----------|
 | **架构层级** | 3 层（Working → Short-term → Long-term） | 5+ 层（LCM → facts → continuity → GraphRAG → daily files） |
 | **持久化引擎** | SQLite（短期）+ 文件 JSON（长期） | SQLite + PostgreSQL + 向量 DB + Markdown |
 | **上下文注入** | **冻结快照**（System Prompt，Session 级缓存） | 每次请求动态组装（LCM DAG 遍历） |
 | **重要性排序** | ✅ 显式 importance 评分 | 依赖向量相似度 + BM25 |
 | **背景审查** | ✅ 每 10 轮触发 | ✅ Metabolism 每 5 分钟 + Contemplation |
-| **语义检索** | ❌ 暂无 | ✅ Continuity（向量 ~7ms） |
-| **会话搜索** | ❌ 暂无 | ✅ LCM FTS5 + 统一 memory_search 接口 |
-| **知识图谱** | Schema 有，数据空 | ✅ LightRAG/GraphRAG 深度集成 |
-| **自学习** | 技术栈/领域/偏好推断 | ✅ Metacognitive Pipeline（Metabolism→Gaps→Crystallization） |
+| **语义检索** | ✅ L0/L1/L2 语义召回 + 本地向量 fallback + 可选 embedding 重排 | ✅ Continuity（向量 ~7ms） |
+| **会话搜索** | 部分支持：记忆时间线、语义召回、上下文证据；尚未提供完整 LCM 式统一搜索 | ✅ LCM FTS5 + 统一 memory_search 接口 |
+| **知识图谱** | ✅ 知识库图谱、邻域解释、记忆-知识 alignment；大规模 GraphRAG 仍有限 | ✅ LightRAG/GraphRAG 深度集成 |
+| **自学习** | 技术栈/领域/偏好推断 + Dream Scheduler + 知识对齐候选 | ✅ Metacognitive Pipeline（Metabolism→Gaps→Crystallization） |
 | **部署复杂度** | **低**（单 SQLite 文件） | **高**（多 DB + 向量服务） |
 | **可观测性** | 日志 + 文件直观可读 | 依赖工具查询（lcm_grep 等） |
 
@@ -368,12 +370,12 @@ OpenClaw 的核心哲学是**"多语言持久化"（Polyglot Persistence）**：
 4. **重要性显式建模**：OpenClaw 依赖向量相似度的"隐式"重要性，MineEcho 通过 calculateImportance() 显式建模（纠错+0.25、失败+0.15），更可解释、可调试。
 5. **启动成本低**：300 行代码即可跑通记忆系统，OpenClaw 的 LCM 模块约 2000+ 行。
 
-### 5.4 MineEcho 相对 OpenClaw 的劣势
+### 5.4 MineEcho 相对 OpenClaw 的当前限制
 
-1. **语义检索缺失**：OpenClaw 的 Continuity 层支持"上次那个数据库问题"的模糊召回，MineEcho 目前只能按时间/重要性排序。
-2. **会话历史不可搜索**：OpenClaw 的 LCM 提供全量 FTS5 搜索，MineEcho 的聊天历史存储在 JSON 文件中，无索引。
-3. **知识图谱未激活**：OpenClaw 的 GraphRAG 已深度集成，MineEcho 的 knowledgeGraph 字段为空。
-4. **自学习闭环不完整**：OpenClaw 的 Metacognitive Pipeline 是持续运转的学习系统，MineEcho 的背景审查 Agent 是定期触发，频率和深度有限。
+1. **统一搜索接口仍不完整**：MineEcho 已有语义召回和时间线，但还没有 OpenClaw LCM 那种覆盖全量会话、事实和工具历史的统一搜索接口。
+2. **外部向量库仍是可选增强**：当前默认依赖本地向量 fallback 和配置的 embedding provider，尚未强制要求独立向量服务，因此大规模语义检索能力低于完整 OpenClaw 部署。
+3. **知识图谱偏产品化浏览与对齐**：MineEcho 已有图谱节点、邻域解释和记忆-知识 alignment，但还不是 OpenClaw LightRAG/GraphRAG 那种深度推理管线。
+4. **自学习闭环仍偏保守**：Dream Scheduler 和 alignment 候选已经接入，但默认仍强调可审查、可回滚，不会无提示地大规模改写用户知识库。
 
 ---
 
@@ -397,7 +399,7 @@ Hermes 采用**双层架构**：
 
 ### 6.2 对比矩阵
 
-| 维度 | MineEcho v3.5 | Hermes Agent |
+| 维度 | MineEcho 0.1.0 | Hermes Agent |
 |------|-----------|--------------|
 | **架构层级** | 3 层 | 2 层（内置 + 外部插件） |
 | **存储介质** | SQLite + 文件 JSON | 文件 Markdown + 插件化后端 |
