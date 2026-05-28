@@ -33,13 +33,13 @@ async function testCompactsLongTaskOutputForMemory() {
   assert.equal(result.rawChars, raw.length + "build failed".length);
   assert.equal(result.compacted, true);
   assert.ok(result.content.length <= 1200, "memory content should be bounded");
-  assert.ok(result.content.includes("TokenJuice"), "compacted memory should disclose compaction");
+  assert.ok(result.content.includes("TokenLess"), "compacted memory should disclose compaction");
   assert.ok(result.content.includes("npm run build"), "compacted memory should keep command context");
   assert.ok(result.reducedChars < result.rawChars);
   assert.ok(result.ratio < 1);
 
   const metrics = getTokenJuiceMetrics();
-  assert.ok(metrics.totalRuns >= 1, "TokenJuice metrics should be recorded");
+  assert.ok(metrics.totalRuns >= 1, "TokenLess metrics should be recorded");
 }
 
 async function testPreservesShortNaturalOutput() {
@@ -70,7 +70,7 @@ async function testDocumentsUseBudgetWhenVeryLong() {
 
   assert.equal(result.compacted, true);
   assert.ok(result.content.length <= 1500);
-  assert.ok(result.content.includes("TokenJuice"));
+  assert.ok(result.content.includes("TokenLess"));
 }
 
 async function run() {

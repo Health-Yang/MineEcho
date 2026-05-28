@@ -12,7 +12,7 @@ All notable MineEcho changes are summarized here.
 - Memory-to-knowledge alignment preview, commit history, and graph refresh hooks.
 - Knowledge Base task center with indexing, organization, graph extraction, consistency checks, and retry actions.
 - Focused Knowledge Graph view for source-centered graph exploration.
-- TokenJuice metrics and local cost/compression persistence.
+- TokenLess metrics and local cost/compression persistence.
 - Release checks for runtime data, local secrets, version consistency, and focused build/test verification.
 - GitHub CI, PR template, issue templates, contribution guide, security policy, environment reference, runtime data guide, and release checklist.
 

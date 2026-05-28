@@ -2,7 +2,7 @@
  * Document Processor - Main Entry Point
  *
  * Unified interface for extracting text from various document formats.
- * Extracts text and prepares it for TokenJuice compression.
+ * Extracts text and prepares it for TokenLess compression.
  */
 
 export * from './types.js';

@@ -11,7 +11,7 @@ MineEcho should become a local-first workplace intelligence agent that improves 
 - Memory Tree becomes the durable learning substrate.
 - Knowledge Base remains the durable document and wiki substrate.
 - Graph navigation connects skills, memory, and knowledge into explainable routes.
-- TokenJuice closes the cost and context-quality loop for tool output, memory distillation, and retrieval.
+- TokenLess closes the cost and context-quality loop for tool output, memory distillation, and retrieval.
 
 The near-term implementation should be additive: new docs, new types, small storage tables, background jobs, and read-only routing decisions before any invasive chat/runtime rewrite.
 
@@ -23,7 +23,7 @@ The near-term implementation should be additive: new docs, new types, small stor
 | Memory | `apps/bff/src/memory/*`, `apps/bff/src/memory/memory-tree/*` | Distill interactions into L0-L3 with provenance and retention policy. |
 | Knowledge | `apps/bff/src/knowledge-base/*` | Align wiki pages, chunks, graph nodes, and memories through shared provenance IDs. |
 | Graph | `apps/bff/src/knowledge-base/graph-store.ts` | Extend node/edge semantics before adding a separate graph engine. |
-| TokenJuice | `apps/bff/src/tokenjuice/*` | Feed reduction stats into routing, context budgets, and distillation quality metrics. |
+| TokenLess | `apps/bff/src/tokenjuice/*` | Feed reduction stats into routing, context budgets, and distillation quality metrics. |
 
 ## 3. Roadmap
 
@@ -59,7 +59,7 @@ Scope:
 
 Proposed pipeline:
 1. Capture: chat turns, skill usage, KB interactions, and tool outputs create source events.
-2. Reduce: TokenJuice compacts noisy tool output before memory insertion.
+2. Reduce: TokenLess compacts noisy tool output before memory insertion.
 3. Score: importance, novelty, confidence, and risk flags decide whether an item enters L0.
 4. Distill: L0 buckets seal into L1/L2/L3 summaries using existing fanout and quota rules.
 5. Link: entities and relations attach to graph nodes with provenance.
@@ -111,9 +111,9 @@ Acceptance criteria:
 - Every edge used for context has provenance or is labeled as inferred.
 - UI graph consumers can distinguish KB-only nodes from memory/skill nodes.
 
-### P4: TokenJuice Cost Loop
+### P4: TokenLess Cost Loop
 
-Goal: turn TokenJuice from a reducer into a feedback loop for cost, quality, and routing decisions.
+Goal: turn TokenLess from a reducer into a feedback loop for cost, quality, and routing decisions.
 
 Scope:
 - Reuse existing rule loading, classification, and compaction results.
@@ -366,10 +366,10 @@ Initial routing policy:
 - Any network, file mutation, or external process skill requires confirmation unless already invoked manually.
 - Safety findings lower candidate score and can force `requiresConfirmation`.
 
-## 6. TokenJuice Feedback Metrics
+## 6. TokenLess Feedback Metrics
 
 ```typescript
-export interface TokenJuiceUsageRecord {
+export interface TokenLessUsageRecord {
   id: string;
   userId?: string;
   sessionId?: string;
@@ -408,10 +408,10 @@ Acceptance metrics:
 | Phase | Verification |
 |-------|--------------|
 | P0 | Unit tests for registry normalization and router scoring; dry-run route returns evidence. |
-| P1 | Tests for provenance persistence, L0 admission policy, TokenJuice reduction before memory insert, and recall explanations. |
+| P1 | Tests for provenance persistence, L0 admission policy, TokenLess reduction before memory insert, and recall explanations. |
 | P2 | Alignment tests for duplicate entity merge, conflict preservation, and provenance labels in search results. |
 | P3 | Graph traversal tests for depth, edge type filtering, budget truncation, and provenance requirements. |
-| P4 | TokenJuice stats tests for rule metadata, failure preservation, and aggregate cost reports. |
+| P4 | TokenLess stats tests for rule metadata, failure preservation, and aggregate cost reports. |
 
 ## 9. Open Questions
 

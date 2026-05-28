@@ -1,5 +1,5 @@
 /**
- * Document Processor - Document Text Extraction for TokenJuice
+ * Document Processor - Document Text Extraction for TokenLess
  *
  * Extracts and compresses text from various document formats:
  * - PDF files
@@ -8,7 +8,7 @@
  * - PowerPoint presentations (.pptx)
  * - HTML web pages
  *
- * The extracted text is then processed through TokenJuice for
+ * The extracted text is then processed through TokenLess for
  * maximum compression before being sent to the LLM.
  */
 

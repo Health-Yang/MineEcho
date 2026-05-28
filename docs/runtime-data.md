@@ -30,7 +30,7 @@ The repository ignores `.mineecho/`, `.openclaw/`, `apps/**/.mineecho/`, `apps/*
 | `.mineecho/ai-apps.json` | AI app connection metadata | Often, if API keys are configured | Yes, imported AI apps are removed |
 | `.mineecho/custom-skills.json` | JSON-imported skill metadata | Usually no | Yes, imported custom skills are removed |
 | `.mineecho/skills-state.json` | Skill enable/disable flags | No | Yes, skill toggles reset |
-| `.mineecho/tokenjuice-metrics.json` | TokenJuice compression/cost metrics | No direct secrets | Yes, metrics reset |
+| `.mineecho/tokenjuice-metrics.json` | TokenLess compression/cost metrics; legacy filename kept for compatibility | No direct secrets | Yes, metrics reset |
 | `.mineecho/performance-metrics.json` | Console performance telemetry posted to the BFF | May include paths/user-agent/IP | Yes, metrics reset |
 | `.mineecho/chat-history/` | Local chat transcripts | Yes | Yes, chat history is removed |
 | `.mineecho/audio/` | Meeting/audio recordings | Yes | Yes, recordings are removed |

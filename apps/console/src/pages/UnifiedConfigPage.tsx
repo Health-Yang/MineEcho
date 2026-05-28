@@ -19,7 +19,7 @@ import {
   ThunderboltOutlined,
   WifiOutlined,
 } from "@ant-design/icons";
-import { fetchTokenJuiceMetrics, type TokenJuiceMetrics } from "../utils/tokenJuiceMetrics";
+import { fetchTokenLessMetrics, type TokenLessMetrics } from "../utils/tokenJuiceMetrics";
 
 interface WorkspaceInfo {
   configured: boolean;
@@ -233,7 +233,7 @@ export function UnifiedConfigPage() {
   const [gateway, setGateway] = useState<GatewayStatus | null>(null);
   const [mineechoVersionInfo, setMineEchoVersionInfo] = useState<MineEchoVersionInfo | null>(null);
   const [workspaceInfo, setWorkspaceInfo] = useState<WorkspaceInfo | null>(null);
-  const [tokenJuiceMetrics, setTokenJuiceMetrics] = useState<TokenJuiceMetrics | null>(null);
+  const [tokenJuiceMetrics, setTokenLessMetrics] = useState<TokenLessMetrics | null>(null);
   const [activeSection, setActiveSection] = useState<SettingsSection>("model");
 
   const [loading, setLoading] = useState(false);
@@ -311,11 +311,11 @@ export function UnifiedConfigPage() {
     }
   }, []);
 
-  const loadTokenJuiceMetrics = useCallback(async () => {
+  const loadTokenLessMetrics = useCallback(async () => {
     try {
-      setTokenJuiceMetrics(await fetchTokenJuiceMetrics());
+      setTokenLessMetrics(await fetchTokenLessMetrics());
     } catch (error) {
-      console.error("Load TokenJuice metrics error:", error);
+      console.error("Load TokenLess metrics error:", error);
     }
   }, []);
 
@@ -325,15 +325,15 @@ export function UnifiedConfigPage() {
     loadGateway();
     loadMineEchoVersionInfo();
     loadWorkspaceInfo();
-    loadTokenJuiceMetrics();
+    loadTokenLessMetrics();
 
     const timer = setInterval(() => {
       loadGateway();
-      loadTokenJuiceMetrics();
+      loadTokenLessMetrics();
     }, 5000);
 
     return () => clearInterval(timer);
-  }, [loadConfig, loadGateway, loadMineEchoVersionInfo, loadWorkspaceInfo, loadTokenJuiceMetrics, loadTranscriptionConfig]);
+  }, [loadConfig, loadGateway, loadMineEchoVersionInfo, loadWorkspaceInfo, loadTokenLessMetrics, loadTranscriptionConfig]);
 
   useEffect(() => {
     if (!config?.model?.model) return;
@@ -510,7 +510,7 @@ export function UnifiedConfigPage() {
     },
     {
       key: "tokenjuice",
-      label: "TokenJuice",
+      label: "TokenLess",
       value: tokenJuiceMetrics ? "可查看" : "检查中",
       tone: tokenJuiceMetrics ? (tokenJuiceMetrics.totalRuns > 0 ? "ok" : "idle") : "idle",
       detail: tokenJuiceMetrics ? `${(tokenJuiceMetrics.totalRuns || 0).toLocaleString()} 次运行，省 ${tokenSaved.toLocaleString()} tokens` : "读取压缩统计",
@@ -836,13 +836,13 @@ export function UnifiedConfigPage() {
     </div>
   );
 
-  const renderTokenJuiceSection = () => (
+  const renderTokenLessSection = () => (
     <div className="sf-card" style={sectionStyle}>
       <SectionHeader
         icon={<ThunderboltOutlined />}
-        title="TokenJuice"
+        title="TokenLess"
         description="展示工具输出压缩、知识清洗和上下文节省统计。"
-        action={<Button onClick={loadTokenJuiceMetrics}>刷新</Button>}
+        action={<Button onClick={loadTokenLessMetrics}>刷新</Button>}
       />
       <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 10 }}>
         <StatusTile label="运行次数" value={(tokenJuiceMetrics?.totalRuns || 0).toLocaleString()} tone="idle" />
@@ -920,7 +920,7 @@ export function UnifiedConfigPage() {
   const renderActiveSection = () => {
     if (activeSection === "workspace") return renderWorkspaceSection();
     if (activeSection === "transcription") return renderTranscriptionSection();
-    if (activeSection === "tokenjuice") return renderTokenJuiceSection();
+    if (activeSection === "tokenjuice") return renderTokenLessSection();
     if (activeSection === "runtime") return renderRuntimeSection();
     return renderModelSection();
   };
@@ -958,7 +958,7 @@ export function UnifiedConfigPage() {
             { label: "模型与 Gateway", value: "model" },
             { label: "工作区", value: "workspace" },
             { label: "语音转录", value: "transcription" },
-            { label: "TokenJuice", value: "tokenjuice" },
+            { label: "TokenLess", value: "tokenjuice" },
             { label: "版本与数据", value: "runtime" },
           ]}
         />

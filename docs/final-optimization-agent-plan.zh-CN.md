@@ -11,7 +11,7 @@ Make MineEcho feel like one coherent product before open source release: memory 
 - 记: chat and meeting results enter layered memory and can be recalled across days.
 - 学: imported knowledge and high-confidence memories can align into the knowledge graph.
 - 用: installed skills and AI apps are surfaced as callable capabilities.
-- 省: TokenJuice reduces noisy imported content and command/tool output without truncating model responses artificially.
+- 省: TokenLess reduces noisy imported content and command/tool output without truncating model responses artificially.
 
 ## Execution Phases
 

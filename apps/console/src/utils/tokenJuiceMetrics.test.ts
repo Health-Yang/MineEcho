@@ -1,5 +1,5 @@
 import assert from "node:assert/strict";
-import { fetchTokenJuiceMetrics } from "./tokenJuiceMetrics";
+import { fetchTokenLessMetrics } from "./tokenJuiceMetrics";
 
 const calls: Array<{ url: string; init?: RequestInit }> = [];
 const fetcher = async (url: string, init?: RequestInit): Promise<Response> => {
@@ -24,11 +24,11 @@ const fetcher = async (url: string, init?: RequestInit): Promise<Response> => {
   } as Response;
 };
 
-const metrics = await fetchTokenJuiceMetrics({ fetcher });
+const metrics = await fetchTokenLessMetrics({ fetcher });
 
 assert.equal(metrics.totalRuns, 2);
 assert.equal(metrics.estimatedTokensSaved, 300);
 assert.equal(metrics.byFamily[0].family, "git");
 assert.equal(calls[0].url, "/api/metrics/tokenjuice");
 
-console.log("TokenJuice metrics API assertions passed");
+console.log("TokenLess metrics API assertions passed");

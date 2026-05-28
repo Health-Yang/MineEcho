@@ -1,6 +1,6 @@
 import { apiFetch } from "./api";
 
-export interface TokenJuiceMetrics {
+export interface TokenLessMetrics {
   totalRuns: number;
   totalRawChars: number;
   totalReducedChars: number;
@@ -33,18 +33,18 @@ export interface TokenJuiceMetrics {
   }>;
 }
 
-interface FetchTokenJuiceMetricsOptions {
+interface FetchTokenLessMetricsOptions {
   fetcher?: (url: string, init?: RequestInit) => Promise<Response>;
 }
 
-export async function fetchTokenJuiceMetrics(
-  options: FetchTokenJuiceMetricsOptions = {}
-): Promise<TokenJuiceMetrics> {
+export async function fetchTokenLessMetrics(
+  options: FetchTokenLessMetricsOptions = {}
+): Promise<TokenLessMetrics> {
   const fetcher = options.fetcher || apiFetch;
   const response = await fetcher("/api/metrics/tokenjuice");
   const result = await response.json();
   if (!response.ok || result.code !== 0) {
-    throw new Error(result.message || "TokenJuice 指标读取失败");
+    throw new Error(result.message || "TokenLess 指标读取失败");
   }
-  return result.data as TokenJuiceMetrics;
+  return result.data as TokenLessMetrics;
 }

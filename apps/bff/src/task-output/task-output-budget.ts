@@ -84,7 +84,7 @@ export async function budgetTaskOutputForMemory(input: TaskOutputBudgetInput): P
 
     const commandLine = buildCommand(input);
     const prefix = [
-      "[TokenJuice 已为记忆系统压缩任务输出]",
+      "[TokenLess 已为记忆系统压缩任务输出]",
       commandLine ? `命令/工具: ${commandLine}` : `工具: ${input.toolName}`,
       input.scenario ? `场景: ${input.scenario}` : undefined,
       `原始字符: ${rawChars}`,
@@ -101,7 +101,7 @@ export async function budgetTaskOutputForMemory(input: TaskOutputBudgetInput): P
       ratio: rawChars > 0 ? content.length / rawChars : 1,
     };
   } catch (error_) {
-    logger.warn("[TaskOutputBudget] TokenJuice compaction failed:", { error: (error_ as Error).message });
+    logger.warn("[TaskOutputBudget] TokenLess compaction failed:", { error: (error_ as Error).message });
     const fallback = output.length > maxInlineChars
       ? `${output.slice(0, Math.max(0, maxInlineChars - 80))}\n\n[输出过长，已为记忆系统截断]`
       : output;

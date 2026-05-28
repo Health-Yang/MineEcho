@@ -12,7 +12,7 @@ flowchart LR
   BFF --> Apps[AI 应用适配器]
   BFF --> Memory[记忆存储]
   BFF --> KB[知识库]
-  BFF --> Metrics[TokenJuice 指标]
+  BFF --> Metrics[TokenLess 指标]
   BFF --> Gateway[PI/Gateway 兼容层]
   Gateway --> Tools[本地工具与技能]
   Apps --> Providers[外部 AI 应用]
@@ -34,14 +34,14 @@ BFF 是本地控制平面，默认运行在 `http://127.0.0.1:3085/`，负责协
 - AI 应用注册，并转换成类似 skill 的可调用单元；
 - 记忆和用户画像持久化；
 - 知识库导入、任务追踪、图谱一致性和图谱邻域 API；
-- TokenJuice 指标和成本控制配置；
+- TokenLess 指标和成本控制配置；
 - Gateway 兼容的工具执行。
 
 运行态数据应保存在被忽略的本地目录，例如 `apps/bff/.mineecho/`、`apps/bff/.openclaw/` 和 `apps/bff/workspace/`。
 
 ## PI/Gateway 兼容层
 
-MineEcho 在产品层扩展了记忆、知识库、AI 应用和 TokenJuice 等能力，但底层仍复用 OpenClaw PI 框架中的 Gateway 相关包与协议能力来执行 skill、调用工具和桥接既有行为。
+MineEcho 在产品层扩展了记忆、知识库、AI 应用和 TokenLess 等能力，但底层仍复用 OpenClaw PI 框架中的 Gateway 相关包与协议能力来执行 skill、调用工具和桥接既有行为。
 
 因此，协议适配器、包集成代码和兼容配置路径中仍会出现 OpenClaw/Gateway 命名。这些属于底层兼容实现。没有迁移计划时不应直接重命名，否则可能破坏现有 skill 和工具集成。
 
@@ -66,9 +66,9 @@ MineEcho 在产品层扩展了记忆、知识库、AI 应用和 TokenJuice 等�
 
 后续方向是后台整合：总结旧记忆、抽象稳定概念、与导入知识对齐，并把冲突或空白暴露给用户审阅。
 
-## TokenJuice 与成本控制
+## TokenLess 与成本控制
 
-TokenJuice 是成本感知层。它在本地追踪压缩和使用指标，同时 BFF 配置显式控制输出 token、超时、限流和缓存大小。长期目标是形成预算感知路由策略，根据任务价值和用户偏好选择记忆深度、模型大小和检索范围。
+TokenLess 是成本感知层。它在本地追踪压缩和使用指标，同时 BFF 配置显式控制输出 token、超时、限流和缓存大小。长期目标是形成预算感知路由策略，根据任务价值和用户偏好选择记忆深度、模型大小和检索范围。
 
 ## 开源边界
 

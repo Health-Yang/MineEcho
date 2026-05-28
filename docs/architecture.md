@@ -12,7 +12,7 @@ flowchart LR
   BFF --> Apps[AI App Adapters]
   BFF --> Memory[Memory Stores]
   BFF --> KB[Knowledge Base]
-  BFF --> Metrics[TokenJuice Metrics]
+  BFF --> Metrics[TokenLess Metrics]
   BFF --> Gateway[PI/Gateway Compatibility]
   Gateway --> Tools[Local Tools and Skills]
   Apps --> Providers[External AI Apps]
@@ -34,14 +34,14 @@ The BFF is the local control plane. It defaults to `http://127.0.0.1:3085/` and 
 - AI app registration and conversion into skill-like callable units;
 - memory and user-profile persistence;
 - knowledge-base import, task tracking, graph consistency, and graph neighborhood APIs;
-- TokenJuice metrics and cost-control settings;
+- TokenLess metrics and cost-control settings;
 - Gateway-compatible tool execution.
 
 Runtime data belongs under local ignored directories such as `apps/bff/.mineecho/`, `apps/bff/.openclaw/`, and `apps/bff/workspace/`.
 
 ## PI/Gateway Compatibility Layer
 
-MineEcho adds product layers for memory, knowledge, AI apps, and TokenJuice, while still reusing Gateway-related packages and protocol capabilities from the OpenClaw PI framework for skill execution, tool calls, and existing behavior bridging.
+MineEcho adds product layers for memory, knowledge, AI apps, and TokenLess, while still reusing Gateway-related packages and protocol capabilities from the OpenClaw PI framework for skill execution, tool calls, and existing behavior bridging.
 
 OpenClaw/Gateway names may still appear inside protocol adapters, package integration code, and compatibility config paths. These names are lower-level compatibility details. They should not be renamed without a migration plan because existing skill and tool integrations may depend on them.
 
@@ -66,9 +66,9 @@ The current implementation separates reviewable memory and imported knowledge:
 
 The planned direction is background consolidation: summarize older memories, abstract stable concepts, align them with imported knowledge, and surface conflicts or gaps for user review.
 
-## TokenJuice and Cost Controls
+## TokenLess and Cost Controls
 
-TokenJuice is the cost-awareness layer. It tracks compression and usage metrics locally, while BFF settings keep output token limits, timeouts, rate limits, and cache sizes explicit. The long-term goal is a budget-aware routing policy that chooses memory depth, model size, and retrieval scope based on task value and user preference.
+TokenLess is the cost-awareness layer. It tracks compression and usage metrics locally, while BFF settings keep output token limits, timeouts, rate limits, and cache sizes explicit. The long-term goal is a budget-aware routing policy that chooses memory depth, model size, and retrieval scope based on task value and user preference.
 
 ## Open-Source Boundaries
 

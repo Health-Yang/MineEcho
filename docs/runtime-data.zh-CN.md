@@ -30,7 +30,7 @@ MINEECHO_CONFIG_HOME=/path/to/mineecho-data
 | `.mineecho/ai-apps.json` | AI 应用连接元数据 | 常见情况下是，尤其配置了 API Key 时 | 可删除，已导入 AI 应用会移除 |
 | `.mineecho/custom-skills.json` | JSON 导入的自定义 skill 元数据 | 通常否 | 可删除，自定义 skill 会移除 |
 | `.mineecho/skills-state.json` | skill 启用/停用状态 | 否 | 可删除，skill 开关会重置 |
-| `.mineecho/tokenjuice-metrics.json` | TokenJuice 压缩和成本节省指标 | 不直接含密钥 | 可删除，指标会重置 |
+| `.mineecho/tokenjuice-metrics.json` | TokenLess 压缩和成本节省指标；文件名为兼容旧版本保留 | 不直接含密钥 | 可删除，指标会重置 |
 | `.mineecho/performance-metrics.json` | Console 上报到 BFF 的性能指标 | 可能含路径、User-Agent、IP | 可删除，指标会重置 |
 | `.mineecho/chat-history/` | 本地聊天记录 | 是 | 可删除，聊天历史会移除 |
 | `.mineecho/audio/` | 会议/录音数据 | 是 | 可删除，录音会移除 |

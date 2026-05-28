@@ -39,7 +39,7 @@ export interface DreamRunResult extends DreamInsights {
 
 const THEME_RULES: Array<{ name: string; patterns: RegExp[] }> = [
   { name: "长期记忆", patterns: [/长期记忆|记住|记得|召回|旧记忆|记忆系统|语义记忆/i] },
-  { name: "TokenJuice 降本", patterns: [/TokenJuice|token|降本|压缩|上下文预算|成本/i] },
+  { name: "TokenLess 降本", patterns: [/TokenLess|TokenJuice|token|降本|压缩|上下文预算|成本/i] },
   { name: "知识图谱", patterns: [/知识图谱|图谱|节点|关系|实体/i] },
   { name: "知识库", patterns: [/知识库|知识卡片|资料|引用|RAG/i] },
   { name: "技能与工具", patterns: [/技能|AI应用|工具|命令|执行|工作流/i] },
@@ -105,7 +105,7 @@ export function buildDreamInsights(chunks: L0Chunk[]): DreamInsights {
 
   const openQuestions = themes.slice(0, 4).map((theme) => {
     if (theme.name === "长期记忆") return "长期记忆里哪些内容应稳定保留为用户偏好或项目背景？";
-    if (theme.name === "TokenJuice 降本") return "TokenJuice 在哪些任务场景里最需要保留原始证据，哪些可以大胆压缩？";
+    if (theme.name === "TokenLess 降本") return "TokenLess 在哪些任务场景里最需要保留原始证据，哪些可以大胆压缩？";
     if (theme.name === "知识图谱") return "知识图谱中哪些实体关系已经确认，哪些只是临时推断？";
     return `${theme.name} 相关内容是否需要沉淀成知识库条目或长期记忆？`;
   });

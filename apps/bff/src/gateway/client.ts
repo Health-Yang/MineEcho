@@ -165,7 +165,7 @@ async function buildMessagesWithHistory(sessionId: string, currentMessage: strin
   messages.push({ role: "user", content: currentMessage });
   const planned = await planChatContext(messages, { currentMessage });
   if (planned.metrics.length > 0) {
-    logger.info("[TokenJuice] Planned chat context", {
+    logger.info("[TokenLess] Planned chat context", {
       sessionId,
       scenario: planned.scenario,
       reductions: planned.metrics.map((metric) => ({

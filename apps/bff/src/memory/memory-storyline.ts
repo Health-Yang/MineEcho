@@ -43,9 +43,9 @@ const TOPIC_RULES: Array<{ name: string; patterns: RegExp[]; question: string }>
     question: "哪些记忆应该沉淀为稳定偏好、项目背景或长期目标？",
   },
   {
-    name: "TokenJuice",
-    patterns: [/TokenJuice|token|降本|压缩|上下文预算|成本/i],
-    question: "哪些任务最需要 TokenJuice 保留完整证据，哪些可以继续压缩？",
+    name: "TokenLess",
+    patterns: [/TokenLess|TokenJuice|token|降本|压缩|上下文预算|成本/i],
+    question: "哪些任务最需要 TokenLess 保留完整证据，哪些可以继续压缩？",
   },
   {
     name: "知识图谱",

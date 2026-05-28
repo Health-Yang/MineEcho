@@ -9,7 +9,7 @@ MineEcho is not meant to be just another chat UI. Its product loop is:
 > **Remember** user preferences and past work.  
 > **Learn** from imported knowledge through Wiki++ and graph context.  
 > **Use** skills and external AI apps through one routing surface.  
-> **Save** context cost with TokenJuice reducers and local metrics.
+> **Save** context cost with TokenLess reducers and local metrics.
 
 ## Why MineEcho
 
@@ -17,7 +17,7 @@ MineEcho is not meant to be just another chat UI. Its product loop is:
 |----------------------|-------------|---------------------|
 | Chat UI | No durable memory, tools and knowledge stay separate | Memory tree + knowledge base + skill routing + cost layer |
 | RAG knowledge base | Fragmented chunks, little action capability | raw/wiki storage, four-channel retrieval, AI apps as callable skills |
-| Agent tool framework | Tool output is noisy and context-heavy | TokenJuice keeps key errors, counts, and actionable lines |
+| Agent tool framework | Tool output is noisy and context-heavy | TokenLess keeps key errors, counts, and actionable lines |
 | Enterprise AI app portal | Apps become silos | AI apps are converted into skills with triggers, routing, and health checks |
 
 The project is designed around four baseline ideas:
@@ -34,7 +34,7 @@ The project is designed around four baseline ideas:
 - AI app adapters that convert RAG/workflow apps into Gateway-callable skills.
 - Memory-to-knowledge alignment preview, commit history, and knowledge graph refresh hooks.
 - Knowledge graph neighborhood API for explaining selected nodes and one-hop relationships.
-- TokenJuice compression metrics with local persistence.
+- TokenLess compression metrics with local persistence.
 
 ## Core Highlights
 
@@ -62,9 +62,9 @@ This makes it closer to a high-density, maintainable AI knowledge substrate than
 
 Native skills, imported skills, and registered AI apps enter the same registry. AI apps are converted into Gateway-callable skills, triggers are derived from `name + description`, and the router scores trigger, name, description, and mode evidence before returning candidates. AI apps therefore participate in the same routing and workflow surface as local skills.
 
-### TokenJuice cost controls
+### TokenLess cost controls
 
-TokenJuice ships with 15 built-in reducer rules for git, npm, cargo, docker, document extraction, and generic long output. It keeps errors, counts, head/tail context, and actionable lines instead of blindly truncating output. Based on the current rule structure, long tool/document outputs commonly fall into an estimated 20%-85% token-saving range depending on repetition and output shape; MineEcho records raw/reduced characters and estimated tokens saved locally for real workload measurement.
+TokenLess ships with 15 built-in reducer rules for git, npm, cargo, docker, document extraction, and generic long output. It keeps errors, counts, head/tail context, and actionable lines instead of blindly truncating output. Based on the current rule structure, long tool/document outputs commonly fall into an estimated 20%-85% token-saving range depending on repetition and output shape; MineEcho records raw/reduced characters and estimated tokens saved locally for real workload measurement.
 
 ## Quick Start
 
@@ -232,7 +232,7 @@ The current implementation is intentionally review-first. Fully autonomous backg
 
 ## OpenClaw Gateway Compatibility
 
-MineEcho is developed on top of capabilities from the OpenClaw PI framework, with additional product layers for memory, Wiki++ knowledge, AI-app-to-skill conversion, TokenJuice, and the local Console.
+MineEcho is developed on top of capabilities from the OpenClaw PI framework, with additional product layers for memory, Wiki++ knowledge, AI-app-to-skill conversion, TokenLess, and the local Console.
 
 The current PI-framework integration still uses Gateway-related packages at runtime for skill execution, tool calls, and protocol bridging. Source files may therefore still contain OpenClaw protocol names, Gateway package names, config file names, or adapter comments.
 
@@ -255,7 +255,7 @@ Avoid renaming OpenClaw/Gateway protocol or config paths blindly; doing so can b
 - Memory consolidation jobs that summarize old interactions into knowledge candidates.
 - Knowledge graph entity normalization, alias merging, and node-level change history.
 - Skill health checks: trigger preview, script presence, route test, connectivity, and risk report.
-- TokenJuice budget agent for task-aware model/context routing.
+- TokenLess budget agent for task-aware model/context routing.
 - Runtime data consolidation through a single config-home abstraction.
 - End-to-end integration tests for AI app import, skill package import, chat routing, and knowledge alignment.
 

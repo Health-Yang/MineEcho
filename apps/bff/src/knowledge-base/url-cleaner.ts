@@ -102,7 +102,7 @@ export async function cleanUrlImportContent(input: {
     );
     tokenJuiceText = compacted.inlineText;
   } catch (error) {
-    logger.warn("[KnowledgeBase] TokenJuice URL cleanup failed:", { error: (error as Error).message });
+    logger.warn("[KnowledgeBase] TokenLess URL cleanup failed:", { error: (error as Error).message });
   }
 
   return {

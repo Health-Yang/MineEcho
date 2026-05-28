@@ -4,7 +4,7 @@ import { normalizeMemoryStoryline } from "./memoryStoryline";
 const result = normalizeMemoryStoryline({
   success: true,
   title: "30 天阶段回顾",
-  headline: "这段时间主要围绕 长期记忆、TokenJuice 展开。",
+  headline: "这段时间主要围绕 长期记忆、TokenLess 展开。",
   itemCount: 4,
   range: { start: 1, end: 2, days: 30 },
   keyTopics: [{ name: "长期记忆", count: 2, evidenceIds: ["a"] }],

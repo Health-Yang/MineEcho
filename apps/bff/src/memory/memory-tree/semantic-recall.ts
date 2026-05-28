@@ -6,7 +6,7 @@ const SEMANTIC_ALIASES: string[][] = [
   ["任务", "执行", "做过", "操作", "命令", "工具", "工作流"],
   ["代码", "编程", "开发", "bug", "报错", "排查", "调试", "修复"],
   ["文档", "材料", "报告", "总结", "汇报", "ppt"],
-  ["成本", "token", "tokenjuice", "压缩", "降本", "预算"],
+  ["成本", "token", "tokenless", "tokenjuice", "压缩", "降本", "预算"],
 ];
 
 const STOP_WORDS = new Set([

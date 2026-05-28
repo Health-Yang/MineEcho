@@ -20,7 +20,7 @@ const items: MemoryItem[] = [
     userId: "u1",
     level: 1,
     source: "conversation",
-    content: "阶段内重点接入 TokenJuice 上下文预算，并扩展技能中心。",
+    content: "阶段内重点接入 TokenLess 上下文预算，并扩展技能中心。",
     tokenCount: 18,
     createdAt: 1770086400000,
     dateKey: "2026-02-02",
@@ -45,7 +45,7 @@ const storyline = buildMemoryStoryline(items, { start: 1770000000000, end: 17702
 
 assert.equal(storyline.itemCount, 3);
 assert(storyline.title.includes("阶段回顾"));
-assert(storyline.headline.includes("长期记忆") || storyline.headline.includes("TokenJuice"));
+assert(storyline.headline.includes("长期记忆") || storyline.headline.includes("TokenLess"));
 assert(storyline.chapters.length >= 1);
 assert(storyline.timeline.length >= 2);
 assert(storyline.keyTopics.some((topic) => topic.name === "长期记忆"));

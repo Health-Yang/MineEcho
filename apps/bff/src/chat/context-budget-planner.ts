@@ -84,7 +84,7 @@ function compactMiddle(text: string, maxChars: number): string {
   const tailChars = Math.max(160, maxChars - headChars - 80);
   const head = normalized.slice(0, headChars).trimEnd();
   const tail = normalized.slice(-tailChars).trimStart();
-  return `${head}\n\n[TokenJuice 已压缩中间 ${normalized.length - head.length - tail.length} 字]\n\n${tail}`;
+  return `${head}\n\n[TokenLess 已压缩中间 ${normalized.length - head.length - tail.length} 字]\n\n${tail}`;
 }
 
 function compactSystemContent(content: string, maxChars: number): { content: string; area: ContextBudgetMetric["area"] } {

@@ -79,7 +79,7 @@ function persistTokenJuiceMetrics(): void {
       "utf8"
     );
   } catch {
-    // Metrics must never break the primary TokenJuice flow.
+    // Metrics must never break the primary TokenLess flow.
   }
 }
 
