@@ -66,7 +66,7 @@ Review these files:
 - `docs/known-limitations.zh-CN.md`
 
 Confirm ports, commands, runtime paths, and compatibility notes match the code.
-Confirm that user-facing product docs use MineEcho as the product name and mention OpenClaw only as Gateway compatibility or legacy configuration context.
+Confirm that user-facing product docs use MineEcho as the product name and describe OpenClaw as the PI framework / Gateway compatibility foundation, not as the user-facing product brand.
 
 ## 4. Check Runtime Defaults
 
@@ -80,7 +80,7 @@ Expected defaults:
 
 ## 5. Check Compatibility Boundaries
 
-Do not rename OpenClaw Gateway protocol paths, config paths, or package integration code without a migration plan.
+Do not rename OpenClaw/Gateway protocol paths, config paths, or package integration code without a migration plan.
 
 Legacy aliases may remain only when intentional:
 

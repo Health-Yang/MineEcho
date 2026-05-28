@@ -1,6 +1,6 @@
 # Architecture Overview
 
-MineEcho is a local-first assistant framework. The default developer setup runs a browser Console and a local BFF. The BFF owns runtime state, skill routing, AI app adapters, memory, knowledge-base APIs, and the OpenClaw Gateway compatibility layer.
+MineEcho is a local-first assistant framework developed on top of capabilities from the OpenClaw PI framework. The default developer setup runs a browser Console and a local BFF. The BFF owns runtime state, skill routing, AI app adapters, memory, knowledge-base APIs, and the PI/Gateway compatibility layer.
 
 ## Runtime Shape
 
@@ -13,7 +13,7 @@ flowchart LR
   BFF --> Memory[Memory Stores]
   BFF --> KB[Knowledge Base]
   BFF --> Metrics[TokenJuice Metrics]
-  BFF --> Gateway[OpenClaw Gateway Compatibility]
+  BFF --> Gateway[PI/Gateway Compatibility]
   Gateway --> Tools[Local Tools and Skills]
   Apps --> Providers[External AI Apps]
   KB --> Graph[Knowledge Graph]
@@ -39,9 +39,11 @@ The BFF is the local control plane. It defaults to `http://127.0.0.1:3085/` and 
 
 Runtime data belongs under local ignored directories such as `apps/bff/.mineecho/`, `apps/bff/.openclaw/`, and `apps/bff/workspace/`.
 
-## Gateway Compatibility Layer
+## PI/Gateway Compatibility Layer
 
-MineEcho still uses OpenClaw naming inside protocol adapters, package integration code, and compatibility config paths. These names are implementation details. They should not be renamed without a migration plan because existing skill and Gateway integrations may depend on them.
+MineEcho adds product layers for memory, knowledge, AI apps, and TokenJuice, while still reusing Gateway-related packages and protocol capabilities from the OpenClaw PI framework for skill execution, tool calls, and existing behavior bridging.
+
+OpenClaw/Gateway names may still appear inside protocol adapters, package integration code, and compatibility config paths. These names are lower-level compatibility details. They should not be renamed without a migration plan because existing skill and tool integrations may depend on them.
 
 ## Skill and AI App Routing
 

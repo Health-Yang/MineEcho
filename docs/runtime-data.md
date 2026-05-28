@@ -52,9 +52,9 @@ Values below `512` are ignored and values above `131072` are clamped. The extern
 
 `MINEECHO_AI_APP_TIMEOUT_MS` controls the external AI app request timeout. The default is `120000` ms; valid values are clamped to `5000`-`600000` ms.
 
-## Gateway Compatibility Data
+## PI/Gateway Compatibility Data
 
-MineEcho embeds OpenClaw as the local Gateway compatibility layer. Gateway runtime files commonly live under:
+MineEcho is developed on top of capabilities from the OpenClaw PI framework, and the current runtime still reuses Gateway-related packages and protocol capabilities. Gateway compatibility runtime files commonly live under:
 
 ```sh
 apps/bff/.openclaw/

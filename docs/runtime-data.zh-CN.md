@@ -52,9 +52,9 @@ MINEECHO_CONFIG_HOME=/path/to/mineecho-data
 
 `MINEECHO_AI_APP_TIMEOUT_MS` 用于控制外部 AI 应用请求超时。默认 `120000` 毫秒；有效值会限制在 `5000` 到 `600000` 毫秒之间。
 
-## Gateway 兼容层数据
+## PI/Gateway 兼容层数据
 
-MineEcho 内嵌 OpenClaw 作为本地 Gateway 兼容层。Gateway 运行态文件通常位于：
+MineEcho 基于 OpenClaw PI 框架能力做二次开发，当前运行时仍复用 Gateway 相关包与协议能力。Gateway 兼容层运行态文件通常位于：
 
 ```sh
 apps/bff/.openclaw/

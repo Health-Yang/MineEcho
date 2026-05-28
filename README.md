@@ -68,16 +68,52 @@ TokenJuice ships with 15 built-in reducer rules for git, npm, cargo, docker, doc
 
 ## Quick Start
 
-Install dependencies for both local apps:
+This is the full path for first-time users.
+
+### 1. Prepare your machine
+
+Install:
+
+- Git
+- Node.js 22 or later
+- npm, usually bundled with Node.js
+
+Check versions:
+
+```sh
+git --version
+node -v
+npm -v
+```
+
+If `node -v` is lower than 22, upgrade Node.js first.
+
+### 2. Clone the repository
+
+```sh
+git clone https://github.com/565628110-byte/MineEcho.git
+cd MineEcho
+```
+
+### 3. Install dependencies
 
 ```sh
 npm run install:apps
+```
+
+This installs dependencies for both BFF and Console.
+
+### 4. Create local environment files
+
+```sh
 cp apps/bff/.env.example apps/bff/.env
 # Optional, only when you need to override Console defaults:
 # cp apps/console/.env.example apps/console/.env
 ```
 
-Start the BFF and Console together from the repository root:
+MineEcho does not ship real model API keys. You can start without keys first, then configure model providers in the Console settings page.
+
+### 5. Start development services
 
 ```sh
 npm run dev
@@ -90,12 +126,18 @@ The development URLs are:
 
 The checked-in Vite dev config proxies `/api` to the local BFF.
 
-You can still start the two apps separately when debugging one side:
+On first launch, open the Console and complete model/API key configuration in Settings. Keep real provider keys in local `.env` files or local Console settings, not in Git.
+
+### 6. Debug BFF or Console separately
+
+You can start the two apps separately when debugging one side:
 
 ```sh
 npm run dev:bff
 npm run dev:console
 ```
+
+### 7. Verify and build
 
 Build checks:
 
@@ -153,7 +195,7 @@ The following runtime directories are intentionally ignored and should stay out 
 - `apps/**/.openclaw/`
 - `apps/**/workspace/`
 
-MineEcho still embeds OpenClaw as the local Gateway compatibility layer in parts of the backend. Those names can appear in protocol adapters, package names, and config-file compatibility code; they are implementation details, not user-facing product branding.
+MineEcho reuses Gateway-related packages from the OpenClaw PI framework in parts of the backend. Those names can appear in protocol adapters, package names, and config-file compatibility code; they are implementation details, not user-facing product branding.
 
 For a more detailed file-by-file map, see [`docs/runtime-data.md`](docs/runtime-data.md).
 
@@ -190,14 +232,16 @@ The current implementation is intentionally review-first. Fully autonomous backg
 
 ## OpenClaw Gateway Compatibility
 
-MineEcho currently uses OpenClaw as the embedded Gateway layer for tool/skill execution compatibility. This means source files may still contain OpenClaw protocol names, package names, config file names, or adapter comments.
+MineEcho is developed on top of capabilities from the OpenClaw PI framework, with additional product layers for memory, Wiki++ knowledge, AI-app-to-skill conversion, TokenJuice, and the local Console.
+
+The current PI-framework integration still uses Gateway-related packages at runtime for skill execution, tool calls, and protocol bridging. Source files may therefore still contain OpenClaw protocol names, Gateway package names, config file names, or adapter comments.
 
 The intended boundary is:
 
 - **MineEcho:** product UI, BFF orchestration, memory, knowledge, skill registry, routing, and local-first runtime defaults.
-- **Gateway compatibility layer:** OpenClaw package/protocol integration used to execute skills and bridge existing Gateway behavior.
+- **PI/Gateway compatibility layer:** Gateway-related packages and protocol capabilities from the OpenClaw PI framework, reused for skill execution and tool interoperability.
 
-Avoid renaming Gateway protocol paths blindly; doing so can break compatibility.
+Avoid renaming OpenClaw/Gateway protocol or config paths blindly; doing so can break lower-level compatibility.
 
 ## Repository Layout
 

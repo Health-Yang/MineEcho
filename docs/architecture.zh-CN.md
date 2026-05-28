@@ -1,6 +1,6 @@
 # 架构总览
 
-MineEcho 是一个本地优先的 AI 助手框架。默认开发形态由浏览器 Console 和本地 BFF 组成。BFF 负责运行态数据、技能路由、AI 应用适配、记忆、知识库 API，以及 OpenClaw Gateway 兼容层。
+MineEcho 是一个基于 OpenClaw PI 框架能力二次开发的本地优先 AI 助手框架。默认开发形态由浏览器 Console 和本地 BFF 组成。BFF 负责运行态数据、技能路由、AI 应用适配、记忆、知识库 API，以及 PI/Gateway 兼容层。
 
 ## 运行结构
 
@@ -13,7 +13,7 @@ flowchart LR
   BFF --> Memory[记忆存储]
   BFF --> KB[知识库]
   BFF --> Metrics[TokenJuice 指标]
-  BFF --> Gateway[OpenClaw Gateway 兼容层]
+  BFF --> Gateway[PI/Gateway 兼容层]
   Gateway --> Tools[本地工具与技能]
   Apps --> Providers[外部 AI 应用]
   KB --> Graph[知识图谱]
@@ -39,9 +39,11 @@ BFF 是本地控制平面，默认运行在 `http://127.0.0.1:3085/`，负责协
 
 运行态数据应保存在被忽略的本地目录，例如 `apps/bff/.mineecho/`、`apps/bff/.openclaw/` 和 `apps/bff/workspace/`。
 
-## Gateway 兼容层
+## PI/Gateway 兼容层
 
-MineEcho 在协议适配器、包集成代码和兼容配置路径中仍会出现 OpenClaw 命名。这些是实现细节。没有迁移计划时不应直接重命名，否则可能破坏现有 skill 和 Gateway 集成。
+MineEcho 在产品层扩展了记忆、知识库、AI 应用和 TokenJuice 等能力，但底层仍复用 OpenClaw PI 框架中的 Gateway 相关包与协议能力来执行 skill、调用工具和桥接既有行为。
+
+因此，协议适配器、包集成代码和兼容配置路径中仍会出现 OpenClaw/Gateway 命名。这些属于底层兼容实现。没有迁移计划时不应直接重命名，否则可能破坏现有 skill 和工具集成。
 
 ## Skill 与 AI 应用路由
 

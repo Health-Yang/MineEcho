@@ -85,16 +85,52 @@ TokenJuice 当前内置 15 类规则，覆盖 git、npm、cargo、docker、文�
 
 ## 快速启动
 
-安装 BFF 和 Console 的依赖：
+下面是面向第一次使用者的完整流程。
+
+### 1. 准备环境
+
+需要先安装：
+
+- Git
+- Node.js 22 或更高版本
+- npm，通常会随 Node.js 一起安装
+
+检查版本：
+
+```sh
+git --version
+node -v
+npm -v
+```
+
+如果 `node -v` 低于 22，建议先升级 Node.js。
+
+### 2. 克隆项目
+
+```sh
+git clone https://github.com/565628110-byte/MineEcho.git
+cd MineEcho
+```
+
+### 3. 安装依赖
 
 ```sh
 npm run install:apps
+```
+
+这个命令会分别安装 BFF 和 Console 的依赖。
+
+### 4. 创建本地环境文件
+
+```sh
 cp apps/bff/.env.example apps/bff/.env
 # 可选，仅在需要覆盖 Console 默认行为时使用：
 # cp apps/console/.env.example apps/console/.env
 ```
 
-在仓库根目录同时启动 BFF 和 Console：
+MineEcho 不会把真实模型密钥放进仓库。首次运行可以先不填 key，后续在 Console 的设置页中配置模型 Provider。
+
+### 5. 启动开发服务
 
 ```sh
 npm run dev
@@ -107,14 +143,18 @@ npm run dev
 
 当前 Vite 开发配置会把 `/api` 代理到本地 BFF。
 
-首次运行时，先打开 Console，再在设置中确认模型、Gateway 或 Provider 配置是否符合本机环境。MineEcho 不会随源码仓库提供真实模型密钥或生产端点；需要调用外部模型、嵌入服务、AI 应用或技能执行时，请只在本地 `.env` 中配置。
+首次运行时，先打开 Console，再在设置中完成模型/API Key 配置。需要调用外部模型、嵌入服务、AI 应用或技能执行时，请只在本地 `.env` 或 Console 设置页中配置，不要提交到 Git。
 
-如果需要单独调试某一侧，也可以分别启动：
+### 6. 单独调试 BFF 或 Console
+
+如果需要单独调试某一侧，可以分别启动：
 
 ```sh
 npm run dev:bff
 npm run dev:console
 ```
+
+### 7. 验证和构建
 
 构建检查：
 
@@ -186,6 +226,8 @@ BFF 默认端口是 `3085`。只有在同步修改 Console 代理目标时，才
 
 更详细的运行态文件说明见 [`docs/runtime-data.zh-CN.md`](docs/runtime-data.zh-CN.md)。
 
+MineEcho 的底层执行能力会复用 OpenClaw PI 框架中的 Gateway 相关包。因此 `.openclaw/` 路径和部分 OpenClaw/Gateway 命名仍会出现在运行态和兼容代码中，它们是底层实现细节，不是对外产品品牌。
+
 ## 项目文档
 
 - 环境变量说明：[`docs/environment.zh-CN.md`](docs/environment.zh-CN.md)
@@ -220,14 +262,16 @@ MineEcho 的记忆和知识库模块面向长期运行的个人或团队助手�
 
 ## OpenClaw Gateway 兼容层
 
-MineEcho 当前内嵌 OpenClaw 作为本地 Gateway 兼容层，用于执行技能和复用已有 Gateway 能力。因此源码中仍可能出现 OpenClaw 协议名、包名、配置文件名或适配器注释。
+MineEcho 是基于 OpenClaw 的 PI 框架能力做的二次开发，并在产品层增加了记忆、Wiki++ 知识库、AI 应用转 skill、TokenJuice 和本地 Console 等能力。
+
+当前 PI 框架相关能力在运行时仍会使用 Gateway 相关包来完成 skill 执行、工具调用和协议桥接。因此源码中仍可能出现 OpenClaw 协议名、Gateway 包名、配置文件名或适配器注释。
 
 推荐理解边界如下：
 
 - **MineEcho：** 产品 UI、BFF 编排、记忆、知识库、技能注册、技能路由和本地优先运行态。
-- **Gateway 兼容层：** OpenClaw 包/协议集成，用于执行 skill 和桥接既有 Gateway 行为。
+- **PI/Gateway 兼容层：** 复用 OpenClaw PI 框架中的 Gateway 相关包与协议能力，用于执行 skill 和桥接既有工具行为。
 
-不要盲目重命名 Gateway 协议路径，否则容易破坏兼容性。
+不要盲目重命名 OpenClaw/Gateway 协议路径或配置路径，否则容易破坏底层兼容性。
 
 ## 仓库结构
 
