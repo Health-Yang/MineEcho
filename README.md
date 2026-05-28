@@ -163,7 +163,7 @@ Start the built BFF package:
 npm run start:bff
 ```
 
-Smoke verification:
+Full verification:
 
 ```sh
 npm run verify
@@ -180,6 +180,14 @@ Dependency audit for release-blocking advisories:
 ```sh
 npm run audit:apps
 ```
+
+Export a filtered source tree for public release:
+
+```sh
+npm run export:release
+```
+
+The export command writes to `releases/mineecho-source-<version>/` and checks that local runtime data, `.env` files, databases, keys, logs, and cache artifacts are not included. Publish from the export directory or a fresh clone, not from a local development tree.
 
 ## Local-First Defaults
 
@@ -262,7 +270,7 @@ Avoid renaming OpenClaw/Gateway protocol or config paths blindly; doing so can b
 - `apps/bff/` - backend-for-frontend service configuration and runtime package.
 - `apps/console/` - console application package.
 - `docs/` - project notes and documentation.
-- `designs/` and `_designs/` - design materials and experiments.
+- `vendor/openclaw-gateway/` - vendored OpenClaw Gateway runtime source and built runtime files.
 
 ## Roadmap
 

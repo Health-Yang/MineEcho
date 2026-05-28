@@ -292,7 +292,7 @@ MineEcho 是基于 OpenClaw 的 PI 框架能力做的二次开发，并在产品
 - `apps/bff/`：BFF 服务、路由、记忆、知识库、技能和 Gateway 适配。
 - `apps/console/`：Console 前端应用。
 - `docs/`：技术文档、优化计划和运行态说明。
-- `designs/`、`_designs/`：设计材料和实验稿。
+- `vendor/openclaw-gateway/`：随仓库发布的 OpenClaw Gateway runtime 源码和构建产物。
 
 ## Roadmap
 
