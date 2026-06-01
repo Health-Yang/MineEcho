@@ -15,11 +15,6 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - os: macos-13
-            label: darwin-x64
-            platform: darwin
-            arch: x64
-            shell: bash
           - os: windows-latest
             label: win32-x64
             platform: win32
@@ -78,7 +73,7 @@ jobs:
         run: |
           cd releases
           if [ "${{ matrix.platform }}" = "win32" ]; then
-            powershell.exe -NoProfile -Command "Compress-Archive -Path 'MineEcho-v0.1.0-runtime-${{ matrix.label }}' -DestinationPath 'MineEcho-v0.1.0-runtime-${{ matrix.label }}.zip' -Force"
+            7z a -tzip -mx=5 "MineEcho-v0.1.0-runtime-${{ matrix.label }}.zip" "MineEcho-v0.1.0-runtime-${{ matrix.label }}"
           else
             zip -qry "MineEcho-v0.1.0-runtime-${{ matrix.label }}.zip" "MineEcho-v0.1.0-runtime-${{ matrix.label }}"
           fi
