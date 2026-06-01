@@ -125,7 +125,7 @@ TokenLess 当前内置 15 类规则，覆盖 git、npm、cargo、docker、文档
 
 ### 方式一：下载网盘运行包，解压即用
 
-如果你只是想快速体验 MineEcho，推荐先下载已经打包好的运行包。运行包内置了 MineEcho、OpenClaw Gateway 兼容层、常用默认技能和依赖目录，正常情况下不需要再手动安装 OpenClaw 或重新下载 npm 依赖。
+如果你只是想快速体验 MineEcho，推荐先下载已经打包好的运行包。运行包内置了 MineEcho、OpenClaw Gateway 兼容层、常用默认技能和依赖目录，正常情况下不需要再手动安装 OpenClaw 或重新下载 npm 依赖。请注意：运行包按操作系统区分，`runtime-darwin-*` 只适合 macOS，Windows 需要 `runtime-win32-x64` 专用包，不能把 macOS 包直接拿到 Windows 上运行。
 
 - 百度网盘：<https://pan.baidu.com/s/1ttbKgAgeSxdR8ZTWhj12VQ?pwd=gih1>
 - 提取码：`gih1`
@@ -156,6 +156,8 @@ Windows：
 start-mineecho-v0.1.bat
 ```
 
+如果你在 Windows 上看到包名包含 `darwin`，说明拿到的是 macOS 包，请不要继续运行；需要下载 Windows 专用包，或使用源码方式重新安装依赖。
+
 首次进入后，在设置页配置模型 Provider 和 API Key，然后回到聊天页测试。
 
 运行包需要本机已安装 Node.js 22.19.0 或更高版本。检查方式：
@@ -185,7 +187,7 @@ start-mineecho-v0.1.bat
 
 ### 方式二：从源码启动
 
-下面是面向第一次使用者的完整流程。
+下面是面向第一次使用者的完整流程。源码方式会在当前系统上重新安装依赖，适合没有对应系统 runtime 包、或者需要开发调试的用户。
 
 #### 1. 准备环境
 
@@ -217,6 +219,8 @@ cd MineEcho
 ```sh
 npm run install:apps
 ```
+
+如果你已经按截图误输入了 `npm run install:all`，也可以继续使用；它是 `install:apps` 的兼容别名。
 
 这个命令会安装 BFF、Console，以及仓库内置的 OpenClaw Gateway runtime 依赖。MineEcho 已经在 `vendor/openclaw-gateway/` 中包含 OpenClaw Gateway runtime 源码，用户不需要单独安装 OpenClaw。
 
