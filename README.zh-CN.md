@@ -123,9 +123,71 @@ TokenLess 当前内置 15 类规则，覆盖 git、npm、cargo、docker、文档
 
 ## 快速启动
 
+### 方式一：下载网盘运行包，解压即用
+
+如果你只是想快速体验 MineEcho，推荐先下载已经打包好的运行包。运行包内置了 MineEcho、OpenClaw Gateway 兼容层、常用默认技能和依赖目录，正常情况下不需要再手动安装 OpenClaw 或重新下载 npm 依赖。
+
+- 百度网盘：<https://pan.baidu.com/s/1ttbKgAgeSxdR8ZTWhj12VQ?pwd=gih1>
+- 提取码：`gih1`
+
+使用步骤：
+
+1. 下载网盘压缩包并解压。
+2. 打开终端，进入解压后的 MineEcho 目录。
+3. 执行对应系统的启动脚本。
+4. 浏览器打开 `http://127.0.0.1:5175`。
+
+macOS/Linux：
+
+```sh
+./start-mineecho-v0.1.sh
+```
+
+如果系统提示没有执行权限：
+
+```sh
+chmod +x start-mineecho-v0.1.sh
+./start-mineecho-v0.1.sh
+```
+
+Windows：
+
+```bat
+start-mineecho-v0.1.bat
+```
+
+首次进入后，在设置页配置模型 Provider 和 API Key，然后回到聊天页测试。
+
+运行包需要本机已安装 Node.js 22.19.0 或更高版本。检查方式：
+
+```sh
+node -v
+npm -v
+```
+
+如遇端口冲突，可在启动前设置端口：
+
+```sh
+export BFF_PORT=3095
+export MINEECHO_CONSOLE_PORT=5185
+export OPENCLAW_GATEWAY_PORT=18799
+./start-mineecho-v0.1.sh
+```
+
+Windows：
+
+```bat
+set BFF_PORT=3095
+set MINEECHO_CONSOLE_PORT=5185
+set OPENCLAW_GATEWAY_PORT=18799
+start-mineecho-v0.1.bat
+```
+
+### 方式二：从源码启动
+
 下面是面向第一次使用者的完整流程。
 
-### 1. 准备环境
+#### 1. 准备环境
 
 需要先安装：
 
@@ -143,14 +205,14 @@ npm -v
 
 如果 `node -v` 低于 22，建议先升级 Node.js。
 
-### 2. 克隆项目
+#### 2. 克隆项目
 
 ```sh
 git clone https://github.com/Health-Yang/MineEcho.git
 cd MineEcho
 ```
 
-### 3. 安装依赖
+#### 3. 安装依赖
 
 ```sh
 npm run install:apps
@@ -158,7 +220,7 @@ npm run install:apps
 
 这个命令会安装 BFF、Console，以及仓库内置的 OpenClaw Gateway runtime 依赖。MineEcho 已经在 `vendor/openclaw-gateway/` 中包含 OpenClaw Gateway runtime 源码，用户不需要单独安装 OpenClaw。
 
-### 4. 创建本地环境文件
+#### 4. 创建本地环境文件
 
 ```sh
 cp apps/bff/.env.example apps/bff/.env
@@ -168,7 +230,7 @@ cp apps/bff/.env.example apps/bff/.env
 
 MineEcho 不会把真实模型密钥放进仓库。首次运行可以先不填 key，后续在 Console 的设置页中配置模型 Provider。
 
-### 5. 启动开发服务
+#### 5. 启动开发服务
 
 ```sh
 npm run dev
@@ -183,7 +245,7 @@ npm run dev
 
 首次运行时，先打开 Console，再在设置中完成模型/API Key 配置。需要调用外部模型、嵌入服务、AI 应用或技能执行时，请只在本地 `.env` 或 Console 设置页中配置，不要提交到 Git。
 
-### 6. 单独调试 BFF 或 Console
+#### 6. 单独调试 BFF 或 Console
 
 如果需要单独调试某一侧，可以分别启动：
 
@@ -192,7 +254,7 @@ npm run dev:bff
 npm run dev:console
 ```
 
-### 7. 验证和构建
+#### 7. 验证和构建
 
 构建检查：
 
