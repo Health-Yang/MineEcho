@@ -68,19 +68,9 @@ jobs:
           console.log(`${manifest.platform}-${manifest.arch} manifest ok`);
           NODE
 
-      - name: Compress runtime package
-        shell: bash
-        run: |
-          cd releases
-          if [ "${{ matrix.platform }}" = "win32" ]; then
-            7z a -tzip -mx=0 "MineEcho-v0.1.0-runtime-${{ matrix.label }}.zip" "MineEcho-v0.1.0-runtime-${{ matrix.label }}"
-          else
-            zip -qry "MineEcho-v0.1.0-runtime-${{ matrix.label }}.zip" "MineEcho-v0.1.0-runtime-${{ matrix.label }}"
-          fi
-
       - name: Upload runtime package
         uses: actions/upload-artifact@v4
         with:
           name: MineEcho-v0.1.0-runtime-${{ matrix.label }}
-          path: releases/MineEcho-v0.1.0-runtime-${{ matrix.label }}.zip
+          path: releases/MineEcho-v0.1.0-runtime-${{ matrix.label }}
           retention-days: 14
