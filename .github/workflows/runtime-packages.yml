@@ -73,7 +73,7 @@ jobs:
         run: |
           cd releases
           if [ "${{ matrix.platform }}" = "win32" ]; then
-            7z a -tzip -mx=5 "MineEcho-v0.1.0-runtime-${{ matrix.label }}.zip" "MineEcho-v0.1.0-runtime-${{ matrix.label }}"
+            7z a -tzip -mx=0 "MineEcho-v0.1.0-runtime-${{ matrix.label }}.zip" "MineEcho-v0.1.0-runtime-${{ matrix.label }}"
           else
             zip -qry "MineEcho-v0.1.0-runtime-${{ matrix.label }}.zip" "MineEcho-v0.1.0-runtime-${{ matrix.label }}"
           fi
