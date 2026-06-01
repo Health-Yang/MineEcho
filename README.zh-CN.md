@@ -41,6 +41,32 @@ MineEcho 是一个源码开放、本地优先的 AI 助手框架，用于构建�
 - **知识库与知识图谱：** 将导入文档、知识节点、实体关系组织成可浏览、可检索、可对齐的知识层。
 - **成本控制：** 通过本地默认、显式模型配置、TokenLess 压缩和指标统计，避免长期使用时成本失控。
 
+## 产品截图
+
+### 聊天工作台
+
+![MineEcho 聊天工作台](marketing/screenshots/01-chat-memory.png)
+
+### 技能中心
+
+![MineEcho 技能中心](marketing/screenshots/02-skills-center.png)
+
+### Wiki++ 知识库
+
+![MineEcho Wiki++ 知识库](marketing/screenshots/03-knowledge-base.png)
+
+### L0-L3 记忆系统
+
+![MineEcho L0-L3 记忆系统](marketing/screenshots/04-memory-system.png)
+
+### 模型与运行设置
+
+![MineEcho 模型与运行设置](marketing/screenshots/05-settings-models.png)
+
+### 会议工作流
+
+![MineEcho 会议工作流](marketing/screenshots/06-meeting-workflow.png)
+
 ## 核心亮点
 
 ### 记忆系统：运行时记忆 + L0-L3 记忆树
