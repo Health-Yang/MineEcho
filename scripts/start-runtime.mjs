@@ -114,6 +114,26 @@ function ensureLocalEnv(examplePath, envPath) {
 }
 
 function assertDependencies() {
+  const coreFiles = [
+    [join(root, "package.json"), "package.json"],
+    [join(paths.bff, "package.json"), "apps/bff/package.json"],
+    [join(paths.console, "package.json"), "apps/console/package.json"],
+    [join(paths.gateway, "package.json"), "vendor/openclaw-gateway/package.json"],
+  ];
+  const missingCoreFiles = coreFiles.filter(([path]) => !existsSync(path));
+  if (missingCoreFiles.length > 0) {
+    const labels = missingCoreFiles.map(([, label]) => `- ${label}`).join("\n");
+    throw new Error(
+      [
+        "运行包文件不完整，缺少核心项目文件：",
+        labels,
+        "",
+        "请重新下载并完整解压 MineEcho 运行包。",
+        "Windows 用户请确认下载的是 MineEcho-v0.1.0-runtime-win32-x64.zip，不是 runtime-darwin-* macOS 包。",
+      ].join("\n"),
+    );
+  }
+
   const required = [
     [join(paths.bff, "node_modules"), "apps/bff/node_modules"],
     [join(paths.console, "node_modules"), "apps/console/node_modules"],

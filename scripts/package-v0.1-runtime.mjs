@@ -3,6 +3,7 @@
 import {
   copyFileSync,
   existsSync,
+  chmodSync,
   mkdirSync,
   readdirSync,
   readFileSync,
@@ -20,8 +21,10 @@ const root = process.cwd();
 const packageJson = JSON.parse(readFile("package.json"));
 const includeNodeModules = !args.includes("--no-node-modules");
 const skipBuild = args.includes("--skip-build");
+const targetPlatform = readArg("--target-platform") || platform();
+const targetArch = readArg("--target-arch") || arch();
 const outArg = readArg("--out");
-const outRoot = resolve(outArg || join(root, "releases", `MineEcho-v${packageJson.version}-runtime-${platform()}-${arch()}`));
+const outRoot = resolve(outArg || join(root, "releases", `MineEcho-v${packageJson.version}-runtime-${targetPlatform}-${targetArch}`));
 
 const blockedNames = new Set([
   ".env",
@@ -56,6 +59,7 @@ main();
 
 function main() {
   assertNotInsideSource();
+  assertNativeRuntimeTarget();
 
   if (!skipBuild) {
     run("npm", ["run", "build"]);
@@ -70,6 +74,7 @@ function main() {
   rmSync(outRoot, { recursive: true, force: true });
   mkdirSync(outRoot, { recursive: true });
   copyFiltered(root, outRoot);
+  prunePlatformLaunchers();
   writeRuntimeManifest();
 
   console.log(`MineEcho v0.1 runtime package exported to ${outRoot}`);
@@ -90,6 +95,17 @@ function assertNotInsideSource() {
   if (outRoot === root || root.startsWith(`${outRoot}${sep}`)) {
     throw new Error("Refusing to export over the source directory or into its parent.");
   }
+}
+
+function assertNativeRuntimeTarget() {
+  if (!includeNodeModules) return;
+  if (targetPlatform === platform() && targetArch === arch()) return;
+  throw new Error(
+    [
+      `Cannot package offline node_modules for ${targetPlatform}-${targetArch} on ${platform()}-${arch()}.`,
+      "Run this command on the target operating system, or pass --no-node-modules for a source-style package.",
+    ].join("\n"),
+  );
 }
 
 function assertExists(relPath) {
@@ -161,18 +177,31 @@ function normalize(path) {
   return path.split(sep).join("/");
 }
 
+function prunePlatformLaunchers() {
+  if (targetPlatform === "win32") {
+    rmSync(join(outRoot, "start-mineecho-v0.1.sh"), { force: true });
+    return;
+  }
+  rmSync(join(outRoot, "start-mineecho-v0.1.bat"), { force: true });
+  const shellLauncher = join(outRoot, "start-mineecho-v0.1.sh");
+  if (existsSync(shellLauncher)) chmodSync(shellLauncher, 0o755);
+}
+
 function writeRuntimeManifest() {
   const manifest = {
     name: "MineEcho v0.1 runtime package",
     version: packageJson.version,
-    platform: platform(),
-    arch: arch(),
+    platform: targetPlatform,
+    arch: targetArch,
+    packagedOn: {
+      platform: platform(),
+      arch: arch(),
+    },
     includesNodeModules: includeNodeModules,
     includesOpenClawGateway: existsSync(join(outRoot, "vendor", "openclaw-gateway", "openclaw.mjs")),
     packagedAt: new Date().toISOString(),
     startup: {
-      macosLinux: "./start-mineecho-v0.1.sh",
-      windows: "start-mineecho-v0.1.bat",
+      command: targetPlatform === "win32" ? "start-mineecho-v0.1.bat" : "./start-mineecho-v0.1.sh",
       consoleUrl: "http://127.0.0.1:5175",
     },
   };

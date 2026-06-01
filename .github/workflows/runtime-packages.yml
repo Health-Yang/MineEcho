@@ -1,0 +1,81 @@
+name: Runtime Packages
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  package:
+    name: Package ${{ matrix.label }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 45
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: macos-13
+            label: darwin-x64
+            platform: darwin
+            arch: x64
+            shell: bash
+          - os: windows-latest
+            label: win32-x64
+            platform: win32
+            arch: x64
+            shell: pwsh
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.19.0"
+          cache: npm
+          cache-dependency-path: |
+            apps/bff/package-lock.json
+            apps/console/package-lock.json
+            vendor/openclaw-gateway/npm-shrinkwrap.json
+
+      - name: Install runtime dependencies
+        run: npm run install:apps
+
+      - name: Build runtime apps
+        run: npm run build
+
+      - name: Package runtime
+        run: >-
+          node scripts/package-v0.1-runtime.mjs
+          --skip-build
+          --target-platform ${{ matrix.platform }}
+          --target-arch ${{ matrix.arch }}
+          --out releases/MineEcho-v0.1.0-runtime-${{ matrix.label }}
+
+      - name: Validate runtime manifest
+        shell: bash
+        run: |
+          node - <<'NODE'
+          const fs = require("node:fs");
+          const path = "releases/MineEcho-v0.1.0-runtime-${{ matrix.label }}/RUNTIME-MANIFEST.json";
+          const manifest = JSON.parse(fs.readFileSync(path, "utf8"));
+          if (manifest.platform !== "${{ matrix.platform }}") {
+            throw new Error(`unexpected platform: ${manifest.platform}`);
+          }
+          if (manifest.arch !== "${{ matrix.arch }}") {
+            throw new Error(`unexpected arch: ${manifest.arch}`);
+          }
+          if (!manifest.includesNodeModules || !manifest.includesOpenClawGateway) {
+            throw new Error("runtime package is missing node_modules or OpenClaw Gateway");
+          }
+          console.log(`${manifest.platform}-${manifest.arch} manifest ok`);
+          NODE
+
+      - name: Upload runtime package
+        uses: actions/upload-artifact@v4
+        with:
+          name: MineEcho-v0.1.0-runtime-${{ matrix.label }}
+          path: releases/MineEcho-v0.1.0-runtime-${{ matrix.label }}
+          retention-days: 14
