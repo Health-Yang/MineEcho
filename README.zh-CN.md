@@ -127,8 +127,8 @@ TokenLess 当前内置 15 类规则，覆盖 git、npm、cargo、docker、文档
 
 如果你只是想快速体验 MineEcho，推荐先下载已经打包好的运行包。运行包内置了 MineEcho、OpenClaw Gateway 兼容层、常用默认技能和依赖目录，正常情况下不需要再手动安装 OpenClaw 或重新下载 npm 依赖。请注意：运行包按操作系统区分，macOS 下载 `MineEcho-v0.1.0-runtime-darwin-*.zip`，Windows 下载 `MineEcho-v0.1.0-runtime-win32-x64.zip`，不能把 macOS 包直接拿到 Windows 上运行。
 
-- 百度网盘：<https://pan.baidu.com/s/1ttbKgAgeSxdR8ZTWhj12VQ?pwd=gih1>
-- 提取码：`gih1`
+- 百度网盘：<https://pan.baidu.com/s/1xd7Su41XD-Q1CrtDwaLpWA?pwd=jjx6>
+- 提取码：`jjx6`
 
 使用步骤：
 
