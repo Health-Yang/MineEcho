@@ -39,6 +39,32 @@ The project is designed around four baseline ideas:
 - **Wiki and graph knowledge base:** organize notes, entities, and relationships into a browsable knowledge layer that can support retrieval and reasoning.
 - **Cost controls:** keep local defaults, explicit provider configuration, and bounded memory/performance settings so experimentation does not silently become expensive.
 
+## Product Screenshots
+
+### Chat Workbench
+
+![MineEcho Chat Workbench](marketing/screenshots/01-chat-memory.png)
+
+### Skills Center
+
+![MineEcho Skills Center](marketing/screenshots/02-skills-center.png)
+
+### Wiki++ Knowledge Base
+
+![MineEcho Wiki++ Knowledge Base](marketing/screenshots/03-knowledge-base.png)
+
+### L0-L3 Memory System
+
+![MineEcho L0-L3 Memory System](marketing/screenshots/04-memory-system.png)
+
+### Model and Runtime Settings
+
+![MineEcho Model and Runtime Settings](marketing/screenshots/05-settings-models.png)
+
+### Meeting Workflow
+
+![MineEcho Meeting Workflow](marketing/screenshots/06-meeting-workflow.png)
+
 ## Current Capabilities
 
 - Local console and BFF for chat, skills, memory, knowledge base, calendar/meeting helpers, and configuration.

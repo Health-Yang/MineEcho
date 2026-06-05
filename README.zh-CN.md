@@ -45,27 +45,27 @@ MineEcho 是一个源码开放、本地优先的 AI 助手框架，用于构建�
 
 ### 聊天工作台
 
-![MineEcho 聊天工作台](marketing/screenshots/01-chat-memory.png)
+![MineEcho 聊天工作台](marketing/screenshots-zh/01-chat-memory.png)
 
 ### 技能中心
 
-![MineEcho 技能中心](marketing/screenshots/02-skills-center.png)
+![MineEcho 技能中心](marketing/screenshots-zh/02-skills-center.png)
 
 ### Wiki++ 知识库
 
-![MineEcho Wiki++ 知识库](marketing/screenshots/03-knowledge-base.png)
+![MineEcho Wiki++ 知识库](marketing/screenshots-zh/03-knowledge-base.png)
 
 ### L0-L3 记忆系统
 
-![MineEcho L0-L3 记忆系统](marketing/screenshots/04-memory-system.png)
+![MineEcho L0-L3 记忆系统](marketing/screenshots-zh/04-memory-system.png)
 
 ### 模型与运行设置
 
-![MineEcho 模型与运行设置](marketing/screenshots/05-settings-models.png)
+![MineEcho 模型与运行设置](marketing/screenshots-zh/05-settings-models.png)
 
 ### 会议工作流
 
-![MineEcho 会议工作流](marketing/screenshots/06-meeting-workflow.png)
+![MineEcho 会议工作流](marketing/screenshots-zh/06-meeting-workflow.png)
 
 ## 核心亮点
 
