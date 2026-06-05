@@ -83,6 +83,7 @@ TokenLess ships with 15 built-in reducer rules for git, npm, cargo, docker, docu
 Choose one of the following paths:
 
 - **Windows desktop installer:** recommended for non-developers who want to try MineEcho quickly.
+- **macOS DMG:** recommended for macOS users who want an out-of-the-box desktop package.
 - **Source startup:** recommended for developers who want to inspect, modify, or run the project from source.
 
 ### Option 1: Windows Desktop Installer
@@ -106,7 +107,28 @@ Notes:
 - Real model provider API keys are not bundled. Configure your own key locally after first launch.
 - Runtime data, chat history, local skills, knowledge files, and provider settings are stored on the user's machine.
 
-### Option 2: Source Startup
+### Option 2: macOS DMG
+
+Download the macOS DMG package from Baidu Netdisk:
+
+- Link: <https://pan.baidu.com/s/1Kl-Bu-hO4sI1mzkmFlW2xA?pwd=irip>
+- Extraction code: `irip`
+
+Steps:
+
+1. Download the DMG package from the link above.
+2. Open the DMG and drag MineEcho into Applications.
+3. Launch MineEcho from Applications or Launchpad.
+4. Complete the first-run setup wizard and configure your model provider API key in Settings.
+
+Notes:
+
+- The macOS DMG already includes the MineEcho desktop app and bundled local runtime dependencies required by the packaged version.
+- The current macOS package is ad-hoc signed and not Apple Developer ID notarized. On first launch, if macOS blocks the app, open System Settings -> Privacy & Security and click Open Anyway, or right-click MineEcho and choose Open.
+- Real model provider API keys are not bundled. Configure your own key locally after first launch.
+- Runtime data, chat history, local skills, knowledge files, and provider settings are stored on the user's machine.
+
+### Option 3: Source Startup
 
 This is the full path for first-time users who want to run MineEcho from source.
 

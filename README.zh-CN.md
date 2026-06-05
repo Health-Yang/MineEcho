@@ -144,7 +144,28 @@ TokenLess 当前内置 15 类规则，覆盖 git、npm、cargo、docker、文档
 - 安装包不会内置任何真实模型 API Key。请在首次启动后使用自己的 Key 进行本地配置。
 - 聊天记录、知识库文件、本地技能、运行状态和模型配置默认保存在用户本机。
 
-### 方式二：从源码启动
+### 方式二：macOS DMG 安装包
+
+如果是在 macOS 上快速体验 MineEcho，可以使用 macOS DMG 安装包。
+
+- 百度网盘：<https://pan.baidu.com/s/1Kl-Bu-hO4sI1mzkmFlW2xA?pwd=irip>
+- 提取码：`irip`
+
+使用步骤：
+
+1. 从上面的网盘链接下载 DMG 安装包。
+2. 打开 DMG，将 MineEcho 拖入“应用程序”。
+3. 从“应用程序”或 Launchpad 启动 MineEcho。
+4. 首次启动后完成初始化向导，并在设置页配置自己的模型 Provider API Key。
+
+说明：
+
+- macOS DMG 已经包含 MineEcho 桌面应用和打包版本所需的本地运行依赖。
+- 当前 macOS 包为临时 ad-hoc 签名版本，尚未完成 Apple Developer ID notarization。首次打开如被系统拦截，可在“系统设置 -> 隐私与安全性”中点击“仍要打开”，或右键 MineEcho 选择“打开”。
+- 安装包不会内置任何真实模型 API Key。请在首次启动后使用自己的 Key 进行本地配置。
+- 聊天记录、知识库文件、本地技能、运行状态和模型配置默认保存在用户本机。
+
+### 方式三：从源码启动
 
 下面是面向第一次使用者的完整流程。源码方式会在当前系统上重新安装依赖，适合没有对应系统 runtime 包、或者需要开发调试的用户。
 
