@@ -80,9 +80,37 @@ TokenLess ships with 15 built-in reducer rules for git, npm, cargo, docker, docu
 
 ## Quick Start
 
-This is the full path for first-time users.
+Choose one of the following paths:
 
-### 1. Prepare your machine
+- **Windows desktop installer:** recommended for non-developers who want to try MineEcho quickly.
+- **Source startup:** recommended for developers who want to inspect, modify, or run the project from source.
+
+### Option 1: Windows Desktop Installer
+
+Download the Windows installer from Baidu Netdisk:
+
+- Link: <https://pan.baidu.com/s/15RPezQd6A2yb3HMWLKoQvw?pwd=1ibw>
+- Extraction code: `1ibw`
+
+Steps:
+
+1. Download the installer package from the link above.
+2. Run `MineEcho Setup 1.0.0.exe` on Windows 10 or Windows 11.
+3. Follow the installer prompts.
+4. Launch MineEcho from the desktop shortcut or Start menu.
+5. Complete the first-run setup wizard and configure your model provider API key in Settings.
+
+Notes:
+
+- The Windows installer already includes the MineEcho desktop app and bundled local runtime dependencies required by the packaged version.
+- Real model provider API keys are not bundled. Configure your own key locally after first launch.
+- Runtime data, chat history, local skills, knowledge files, and provider settings are stored on the user's machine.
+
+### Option 2: Source Startup
+
+This is the full path for first-time users who want to run MineEcho from source.
+
+#### 1. Prepare your machine
 
 Install:
 
@@ -100,14 +128,14 @@ npm -v
 
 If `node -v` is lower than 22, upgrade Node.js first.
 
-### 2. Clone the repository
+#### 2. Clone the repository
 
 ```sh
 git clone https://github.com/Health-Yang/MineEcho.git
 cd MineEcho
 ```
 
-### 3. Install dependencies
+#### 3. Install dependencies
 
 ```sh
 npm run install:apps
@@ -115,7 +143,7 @@ npm run install:apps
 
 This installs dependencies for BFF, Console, and the vendored OpenClaw Gateway runtime under `vendor/openclaw-gateway`. MineEcho ships the OpenClaw Gateway runtime source in this repository, so users do not need to install OpenClaw separately.
 
-### 4. Create local environment files
+#### 4. Create local environment files
 
 ```sh
 cp apps/bff/.env.example apps/bff/.env
@@ -125,7 +153,7 @@ cp apps/bff/.env.example apps/bff/.env
 
 MineEcho does not ship real model API keys. You can start without keys first, then configure model providers in the Console settings page.
 
-### 5. Start development services
+#### 5. Start development services
 
 ```sh
 npm run dev
@@ -140,7 +168,7 @@ The checked-in Vite dev config proxies `/api` to the local BFF.
 
 On first launch, open the Console and complete model/API key configuration in Settings. Keep real provider keys in local `.env` files or local Console settings, not in Git.
 
-### 6. Debug BFF or Console separately
+#### 6. Debug BFF or Console separately
 
 You can start the two apps separately when debugging one side:
 
@@ -149,7 +177,7 @@ npm run dev:bff
 npm run dev:console
 ```
 
-### 7. Verify and build
+#### 7. Verify and build
 
 Build checks:
 

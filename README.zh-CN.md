@@ -123,69 +123,26 @@ TokenLess 当前内置 15 类规则，覆盖 git、npm、cargo、docker、文档
 
 ## 快速启动
 
-### 方式一：下载网盘运行包，解压即用
+### 方式一：Windows 桌面安装包
 
-如果你只是想快速体验 MineEcho，推荐先下载已经打包好的运行包。运行包内置了 MineEcho、OpenClaw Gateway 兼容层、常用默认技能和依赖目录，正常情况下不需要再手动安装 OpenClaw 或重新下载 npm 依赖。请注意：运行包按操作系统区分，macOS 下载 `MineEcho-v0.1.0-runtime-darwin-*.zip`，Windows 下载 `MineEcho-v0.1.0-runtime-win32-x64.zip`，不能把 macOS 包直接拿到 Windows 上运行。
+如果只是想快速体验 MineEcho，推荐优先使用 Windows 桌面安装包。
 
-- 百度网盘：<https://pan.baidu.com/s/1xd7Su41XD-Q1CrtDwaLpWA?pwd=jjx6>
-- 提取码：`jjx6`
+- 百度网盘：<https://pan.baidu.com/s/15RPezQd6A2yb3HMWLKoQvw?pwd=1ibw>
+- 提取码：`1ibw`
 
 使用步骤：
 
-1. 下载网盘压缩包并解压。
-2. 确认压缩包名称与系统一致：Windows 不要使用文件名包含 `darwin` 的包。
-3. 打开终端，进入解压后的 MineEcho 目录。
-4. 如需更完整的小白部署说明，请查看包内 `README-DEPLOY.zh-CN.md`。
-5. 执行对应系统的启动脚本。
-6. 浏览器打开 `http://127.0.0.1:5175`。
+1. 从上面的网盘链接下载安装包。
+2. 在 Windows 10 或 Windows 11 上运行 `MineEcho Setup 1.0.0.exe`。
+3. 按安装向导完成安装。
+4. 从桌面快捷方式或开始菜单启动 MineEcho。
+5. 首次启动后完成初始化向导，并在设置页配置自己的模型 Provider API Key。
 
-macOS/Linux：
+说明：
 
-```sh
-./start-mineecho-v0.1.sh
-```
-
-如果系统提示没有执行权限：
-
-```sh
-chmod +x start-mineecho-v0.1.sh
-./start-mineecho-v0.1.sh
-```
-
-Windows：
-
-```bat
-start-mineecho-v0.1.bat
-```
-
-如果你在 Windows 上看到包名包含 `darwin`，说明拿到的是 macOS 包，请不要继续运行；需要下载 Windows 专用包，或使用源码方式重新安装依赖。
-
-首次进入后，在设置页配置模型 Provider 和 API Key，然后回到聊天页测试。
-
-运行包需要本机已安装 Node.js 22.19.0 或更高版本。检查方式：
-
-```sh
-node -v
-npm -v
-```
-
-如遇端口冲突，可在启动前设置端口：
-
-```sh
-export BFF_PORT=3095
-export MINEECHO_CONSOLE_PORT=5185
-export OPENCLAW_GATEWAY_PORT=18799
-./start-mineecho-v0.1.sh
-```
-
-Windows：
-
-```bat
-set BFF_PORT=3095
-set MINEECHO_CONSOLE_PORT=5185
-set OPENCLAW_GATEWAY_PORT=18799
-start-mineecho-v0.1.bat
-```
+- Windows 安装包已经包含 MineEcho 桌面应用和打包版本所需的本地运行依赖。
+- 安装包不会内置任何真实模型 API Key。请在首次启动后使用自己的 Key 进行本地配置。
+- 聊天记录、知识库文件、本地技能、运行状态和模型配置默认保存在用户本机。
 
 ### 方式二：从源码启动
 
