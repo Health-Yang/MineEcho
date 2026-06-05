@@ -127,12 +127,12 @@ TokenLess 当前内置 15 类规则，覆盖 git、npm、cargo、docker、文档
 
 如果只是想快速体验 MineEcho，推荐优先使用 Windows 桌面安装包。
 
-- 百度网盘：<https://pan.baidu.com/s/15RPezQd6A2yb3HMWLKoQvw?pwd=1ibw>
-- 提取码：`1ibw`
+- 百度网盘：<https://pan.baidu.com/s/1oERH-NdpTRwobfp1F8keEQ?pwd=j6kd>
+- 提取码：`j6kd`
 
 使用步骤：
 
-1. 从上面的网盘链接下载安装包。
+1. 从上面的网盘链接下载桌面版合集，并选择 Windows 安装包。
 2. 在 Windows 10 或 Windows 11 上运行 `MineEcho Setup 1.0.0.exe`。
 3. 按安装向导完成安装。
 4. 从桌面快捷方式或开始菜单启动 MineEcho。
@@ -148,12 +148,12 @@ TokenLess 当前内置 15 类规则，覆盖 git、npm、cargo、docker、文档
 
 如果是在 macOS 上快速体验 MineEcho，可以使用 macOS DMG 安装包。
 
-- 百度网盘：<https://pan.baidu.com/s/1Kl-Bu-hO4sI1mzkmFlW2xA?pwd=irip>
-- 提取码：`irip`
+- 百度网盘：<https://pan.baidu.com/s/1oERH-NdpTRwobfp1F8keEQ?pwd=j6kd>
+- 提取码：`j6kd`
 
 使用步骤：
 
-1. 从上面的网盘链接下载 DMG 安装包。
+1. 从上面的网盘链接下载桌面版合集，并选择 macOS DMG 安装包。
 2. 打开 DMG，将 MineEcho 拖入“应用程序”。
 3. 从“应用程序”或 Launchpad 启动 MineEcho。
 4. 首次启动后完成初始化向导，并在设置页配置自己的模型 Provider API Key。

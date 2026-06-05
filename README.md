@@ -88,10 +88,10 @@ Choose one of the following paths:
 
 ### Option 1: Windows Desktop Installer
 
-Download the Windows installer from Baidu Netdisk:
+Download the desktop packages from Baidu Netdisk and choose the Windows installer:
 
-- Link: <https://pan.baidu.com/s/15RPezQd6A2yb3HMWLKoQvw?pwd=1ibw>
-- Extraction code: `1ibw`
+- Link: <https://pan.baidu.com/s/1oERH-NdpTRwobfp1F8keEQ?pwd=j6kd>
+- Extraction code: `j6kd`
 
 Steps:
 
@@ -109,10 +109,10 @@ Notes:
 
 ### Option 2: macOS DMG
 
-Download the macOS DMG package from Baidu Netdisk:
+Download the desktop packages from Baidu Netdisk and choose the macOS DMG package:
 
-- Link: <https://pan.baidu.com/s/1Kl-Bu-hO4sI1mzkmFlW2xA?pwd=irip>
-- Extraction code: `irip`
+- Link: <https://pan.baidu.com/s/1oERH-NdpTRwobfp1F8keEQ?pwd=j6kd>
+- Extraction code: `j6kd`
 
 Steps:
 
